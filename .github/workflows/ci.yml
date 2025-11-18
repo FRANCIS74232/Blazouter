@@ -2,40 +2,46 @@ name: CI Build
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ develop ]
-
-env:
-  DOTNET_VERSION: '10.0.x'
-  DOTNET_QUALITY: 'preview'
+    branches: [ "develop" ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    
+    name: Build
+    runs-on: windows-2022
+    permissions:
+      actions: read
+      contents: read
+
     strategy:
+      fail-fast: false
       matrix:
-        framework: [net10.0]
+        configuration: [
+            Release
+        ]
+        solution: [
+            Blazouter.sln
+        ]
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v5
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v5
       with:
-        dotnet-version: ${{ env.DOTNET_VERSION }}
-        dotnet-quality: ${{ env.DOTNET_QUALITY }}
+        dotnet-version: 10.0.x
+        dotnet-quality: preview
 
     - name: Restore .NET workloads
       run: dotnet workload restore
 
-    - name: Restore dependencies
-      run: dotnet restore
+    - name: Restore the Blazouter
+      run: dotnet restore ${{ matrix.solution }} -p:Configuration=${{ matrix.configuration }} -p:UseSharedCompilation=false --configfile ./NuGet.Config
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore --framework ${{ matrix.framework }}
+    - name: Clean the Blazouter
+      run: dotnet clean ${{ matrix.solution }}
 
-    - name: Build WebAssembly Sample
-      run: dotnet build samples/Blazouter.WebAssembly.Sample/Blazouter.WebAssembly.Sample.csproj --configuration Release --no-restore
+    - name: Build the Blazouter
+      run: dotnet build ${{ matrix.solution }} -c ${{ matrix.configuration }} -p:UseSharedCompilation=false --no-restore /nowarn:CS0067,CS0108,CS0109,CS0114,CS0169,CS0414,CS0618,CS0649,CS8632,CA1416,NU5104,NETSDK1138,SYSLIB0003
