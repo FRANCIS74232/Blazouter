@@ -64,6 +64,9 @@ jobs:
         dotnet-version: 10.0.x
         dotnet-quality: preview
 
+    - name: Restore .NET workloads
+      run: dotnet workload restore
+
     - name: Restore the Blazouter
       run: dotnet restore ${{ matrix.solution }} -p:Configuration=${{ matrix.configuration }} -p:UseSharedCompilation=false --configfile ./NuGet.Config
 
