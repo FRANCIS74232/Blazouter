@@ -1,0 +1,144 @@
+@inject RouterNavigationService NavService
+
+<div class="px-4 py-8">
+	<div class="max-w-4xl mx-auto">
+		<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">🎨 Route Transitions</h1>
+		<p class="text-gray-600 dark:text-gray-400 mb-8">
+			Explore smooth animations between route changes with built-in transition types
+		</p>
+
+		<!-- Transition Types -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">🌫️</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Blur</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Focus transition from blurred to sharp for premium feel
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Blur</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">✨</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Fade</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Smooth fade in/out animation for subtle transitions
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Fade</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">🔄</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Flip</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					3D card flip animation for revealing content
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Flip</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">⬆️</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Lift</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Content lifts up with subtle scaling and shadow (iOS-style)
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Lift</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">📱</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Swipe</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Mobile-style swipe reveal from right to left
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Swipe</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">🔁</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Rotate</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Spinning entrance along Z-axis for dynamic effect
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Rotate</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">🎭</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Curtain</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Theatrical curtain opening from top to bottom
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Curtain</code></pre>
+				</div>
+			</div>
+
+			<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+				<div class="text-3xl mb-3">💡</div>
+				<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Spotlight</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-4">
+					Dramatic lighting effect with brightness and blur
+				</p>
+				<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-3 overflow-x-auto">
+					<pre class="text-sm"><code class="text-gray-300">Transition = RouteTransition.Spotlight</code></pre>
+				</div>
+			</div>
+		</div>
+
+		<!-- Demo Instructions -->
+		<div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-lg p-8 text-white">
+			<h2 class="text-2xl font-semibold mb-4">Try It Out!</h2>
+			<p class="mb-6">
+				Navigate between different pages using the navigation menu above to see the transitions in action.
+				Each route in this demo application is configured with a different transition type.
+			</p>
+			<ul class="space-y-2">
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Home page uses <strong>Blur</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>About page uses <strong>Fade</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Navigation page uses <strong>Flip</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Transitions page uses <strong>Lift</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Users page uses <strong>Swipe</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Protected page uses <strong>Rotate</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Lazy page uses <strong>Curtain</strong> transition</span>
+				</li>
+				<li class="flex items-center">
+					<span class="mr-2">•</span>
+					<span>Error Example page uses <strong>Spotlight</strong> transition</span>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>

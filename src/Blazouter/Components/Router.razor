@@ -1,0 +1,75 @@
+@inject RouterStateService RouterState
+@inject IServiceProvider ServiceProvider
+@inject IRouteMatcherService RouteMatcher
+@inject NavigationManager NavigationManager
+
+@implements IDisposable
+
+<CascadingValue Value="this">
+    @if (_hasError && _errorInfo != null)
+    {
+        @* Show error UI *@
+        <div class="blazouter-view blazouter-error">
+            @if (ErrorContent != null)
+            {
+                @ErrorContent(_errorInfo)
+            }
+            else
+            {
+                <div class="blazouter-default-error">
+                    <div class="blazouter-error-icon">⚠️</div>
+                    <h2>Routing Error</h2>
+                    <p><strong>@_errorInfo.ErrorType:</strong> @_errorInfo.Message</p>
+                    @if (_errorInfo.Url != null)
+                    {
+                        <p><small>URL: @_errorInfo.Url</small></p>
+                    }
+                    @if (_errorInfo.Retry != null)
+                    {
+                        <button class="blazouter-retry-button" @onclick="@_errorInfo.Retry">Try Again</button>
+                    }
+                </div>
+            }
+        </div>
+    }
+    else if (_layoutType != null)
+    {
+        @* Render layout with @ref to preserve instance across navigations *@
+        <DynamicComponent Type="_layoutType" Parameters="@GetLayoutParameters()" @key="_layoutType" />
+    }
+    else if (_isLoading)
+    {
+        <div class="blazouter-view blazouter-loading">
+            @if (Loading != null)
+            {
+                @Loading
+            }
+            else
+            {
+                <div class="blazouter-default-loading">
+                    <div class="blazouter-spinner"></div>
+                    <p>Loading...</p>
+                </div>
+            }
+        </div>
+    }
+    else if (_currentMatch != null && _componentType != null)
+    {
+        @* No layout - apply transition directly to component *@
+        <div class="blazouter-view @_transitionClass">
+            <DynamicComponent Type="_componentType" Parameters="@_componentParameters" />
+        </div>
+    }
+    else if (NotFound != null)
+    {
+        <div class="blazouter-view">
+            @NotFound
+        </div>
+    }
+    else
+    {
+        <div class="blazouter-view">
+            <p>Route not found: @_currentPath</p>
+        </div>
+    }
+</CascadingValue>

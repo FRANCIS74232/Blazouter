@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<ImportMap />
+	<HeadOutlet />
+	<base href="/" />
+	<ResourcePreloader />
+	<meta charset="utf-8" />
+	<link rel="stylesheet" href="@Assets["css/app.min.css"]" />
+	<link rel="icon" type="image/png" href="@Assets["favicon.png"]" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" href="@Assets["Blazouter.Server.Sample.styles.css"]" />
+	<link rel="stylesheet" href="@Assets["_content/Blazouter/blazouter.min.css"]" />
+	<script>
+		// Initialize theme from localStorage before page renders
+		(function() {
+			const theme = localStorage.getItem('theme') || 'light';
+			if (theme === 'dark') {
+				document.documentElement.classList.add('dark');
+			}
+		})();
+	</script>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900">
+	<ReconnectModal />
+	<Routes @rendermode="InteractiveServer" />
+	<script src="@Assets["_framework/blazor.web.js"]"></script>
+</body>
+
+</html>

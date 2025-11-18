@@ -1,0 +1,53 @@
+@inject RouterNavigationService NavService
+@inject RouterStateService RouterState
+
+@if (!string.IsNullOrEmpty(_queryInfo))
+{
+	<div class="mb-6 bg-purple-50 dark:bg-purple-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-800">
+		<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">🔍 Query Parameters Detected</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-3">@_queryInfo</p>
+		<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+			<pre class="text-sm"><code class="text-gray-300">@@inject RouterStateService RouterState
+
+	@@code {
+	    protected override void OnInitialized()
+	    {
+	        string? sort = RouterState.GetQuery("sort");
+	        string? order = RouterState.GetQuery("order");
+	        string? filter = RouterState.GetQuery("filter");
+	        string? page = RouterState.GetQuery("page");
+	    }
+	}</code></pre>
+		</div>
+	</div>
+}
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+	@foreach (var user in _displayedUsers)
+	{
+		<div @onclick="@(() => NavService.NavigateTo($"/users/{user.Id}"))"
+			 class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer transform hover:scale-105 transition-all border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400">
+			<div class="flex items-center mb-4">
+				<div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+					@user.Initials
+				</div>
+				<div class="ml-4">
+					<h3 class="text-xl font-semibold text-gray-900 dark:text-white">@user.Name</h3>
+					<p class="text-gray-600 dark:text-gray-400">@user.Email</p>
+				</div>
+			</div>
+			<div class="flex items-center justify-between text-sm">
+				<span class="text-gray-500 dark:text-gray-400">@user.Role</span>
+				<span class="text-blue-600 dark:text-blue-400 font-medium">View Details →</span>
+			</div>
+		</div>
+	}
+</div>
+
+<div class="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+	<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">💡 Nested Routing</h3>
+	<p class="text-gray-600 dark:text-gray-400">
+		This user list is rendered inside the UserLayout component. Click any user to see the nested UserDetail route!
+		Try navigating from the Navigation page with query strings to see how query parameters work.
+	</p>
+</div>

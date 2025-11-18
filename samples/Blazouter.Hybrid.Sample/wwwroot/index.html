@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base href="/" />
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:,">
+    <title>Blazouter.Hybrid.Sample</title>
+    <link rel="stylesheet" href="css/app.min.css" />
+    <link rel="stylesheet" href="_content/Blazouter/blazouter.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <!-- If you add any scoped CSS files, uncomment the following to load them
+    <link rel="stylesheet" href="Blazouter.Hybrid.Sample.styles.css" /> -->
+    <script>
+        // Initialize theme from localStorage before page renders
+        (function () {
+            const theme = localStorage.getItem('theme') || 'light';
+            if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+            }
+        })();
+    </script>
+</head>
+
+<body class="bg-gray-50 dark:bg-gray-900">
+
+    <div class="status-bar-safe-area"></div>
+
+    <div id="app">
+        <div class="flex flex-col items-center justify-center min-h-screen">
+            <div class="relative w-32 h-32">
+                <svg class="absolute inset-0 w-full h-full animate-spin" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="4" fill="none"
+                            class="text-gray-200 dark:text-gray-700" />
+                    <circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="4" fill="none"
+                            class="text-blue-600 dark:text-blue-400"
+                            stroke-dasharray="calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%"
+                            stroke-linecap="round"
+                            style="transform-origin: center; transform: rotate(-90deg); transition: stroke-dasharray 0.05s ease-in-out;" />
+                </svg>
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-lg font-semibold text-gray-700 dark:text-gray-300" id="loading-text">
+                    Loading
+                </p>
+                <div class="mt-2 flex items-center justify-center space-x-1">
+                    <div class="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0s;"></div>
+                    <div class="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                    <div class="w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full animate-bounce" style="animation-delay: 0.4s;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="blazor-error-ui" class="hidden fixed bottom-0 left-0 right-0 z-50 bg-yellow-50 dark:bg-yellow-900/20 border-t-4 border-yellow-400 dark:border-yellow-600 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-3 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between flex-wrap">
+                <div class="flex items-center flex-1">
+                    <span class="flex p-2">
+                        <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </span>
+                    <p class="ml-3 font-medium text-yellow-800 dark:text-yellow-200">
+                        An unhandled error has occurred.
+                    </p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="." class="text-sm font-medium text-yellow-800 dark:text-yellow-200 hover:text-yellow-900 dark:hover:text-yellow-100 underline">
+                        Reload
+                    </a>
+                    <button type="button" class="inline-flex rounded-md p-1.5 text-yellow-800 dark:text-yellow-200 hover:bg-yellow-100 dark:hover:bg-yellow-800/50 focus:outline-none focus:ring-2 focus:ring-yellow-600 dark:focus:ring-yellow-400" onclick="document.getElementById('blazor-error-ui').style.display='none'">
+                        <span class="sr-only">Dismiss</span>
+                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="_framework/blazor.webview.js" autostart="false"></script>
+
+</body>
+
+</html>

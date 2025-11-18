@@ -1,0 +1,36 @@
+name: CI Build
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+env:
+  DOTNET_VERSION: '10.0.x'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        framework: [net6.0, net7.0, net8.0, net9.0, net10.0]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore --framework ${{ matrix.framework }}
+
+    - name: Build WebAssembly Sample
+      run: dotnet build samples/Blazouter.WebAssembly.Sample/Blazouter.WebAssembly.Sample.csproj --configuration Release --no-restore

@@ -1,0 +1,108 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">🛡️ Error Handling</h1>
+        <p class="text-gray-600 dark:text-gray-400">Demonstrating Blazouter's built-in error handling capabilities</p>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Error Handling Features</h2>
+        <div class="space-y-4 text-gray-700 dark:text-gray-300">
+            <p>Blazouter provides comprehensive error handling for routing operations:</p>
+            
+            <ul class="list-disc list-inside space-y-2 ml-4">
+                <li><strong>Component Loading Errors</strong>: Handles failures during lazy loading</li>
+                <li><strong>Guard Execution Errors</strong>: Catches exceptions in route guards</li>
+                <li><strong>Rendering Errors</strong>: Manages component rendering failures</li>
+                <li><strong>Custom Error Handlers</strong>: Implement IRouterErrorHandler for custom logic</li>
+                <li><strong>Error UI</strong>: Display custom error content or use default UI</li>
+                <li><strong>Retry Capability</strong>: Built-in retry functionality for failed navigations</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Trigger Example Errors</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
+            Click the buttons below to see how Blazouter handles different types of errors:
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button @onclick="TriggerComponentLoadError" 
+                    class="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                💥 Component Load Error
+            </button>
+            
+            <button @onclick="TriggerGuardError"
+                    class="px-4 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition">
+                🚫 Guard Execution Error
+            </button>
+        </div>
+
+        @if (_showErrorMessage)
+        {
+            <div class="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+                <p class="text-blue-800 dark:text-blue-200">
+                    <strong>Note:</strong> Error UI will be displayed by the Router component. Check the main content area.
+                </p>
+            </div>
+        }
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Implementation</h2>
+        
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">1. Router Configuration</h3>
+        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto mb-4"><code class="text-sm">@(@"<Router Routes=""@_routes"" DefaultLayout=""typeof(MainLayout)"">
+    <ErrorContent Context=""errorInfo"">
+        <div class=""error-container"">
+            <h1>⚠️ Navigation Error</h1>
+            <p>@errorInfo.Message</p>
+            <button @onclick=""errorInfo.Retry"">Try Again</button>
+        </div>
+    </ErrorContent>
+    <NotFound>
+        <h1>404 - Page Not Found</h1>
+    </NotFound>
+    <Loading>
+        <p>Loading...</p>
+    </Loading>
+</Router>")</code></pre>
+
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">2. Custom Error Handler</h3>
+        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto mb-4"><code class="text-sm">@(@"public class CustomErrorHandler : IRouterErrorHandler
+{
+    private readonly ILogger<CustomErrorHandler> _logger;
+    
+    public async Task<bool> HandleErrorAsync(
+        Exception exception, 
+        RouterErrorContext context)
+    {
+        _logger.LogError(exception, 
+            ""Routing error: {ErrorType}"", 
+            context.ErrorType);
+        
+        // Return true to show error UI
+        return true;
+    }
+}
+
+// Register in Program.cs
+builder.Services.AddScoped<IRouterErrorHandler, CustomErrorHandler>();")</code></pre>
+
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">3. OnError Event</h3>
+        <pre class="bg-gray-100 dark:bg-gray-900 p-4 rounded-lg overflow-x-auto"><code class="text-sm">@(@"<Router Routes=""@_routes"" OnError=""@HandleError"">
+    <!-- content -->
+</Router>
+
+@code {
+    private async Task HandleError(RouterErrorEventArgs args)
+    {
+        // Custom error handling
+        await ToastService.ShowError(args.Exception.Message);
+        
+        // Set to true to suppress default error UI
+        args.Handled = false;
+    }
+}")</code></pre>
+    </div>
+</div>

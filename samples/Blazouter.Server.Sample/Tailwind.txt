@@ -1,0 +1,9 @@
+npm install -D postcss postcss-cli tailwindcss autoprefixer @tailwindcss/cli @tailwindcss/forms @tailwindcss/postcss @tailwindcss/typography
+
+npx tailwindcss init -p
+
+npx @tailwindcss/upgrade
+npx npm-check-updates -u
+
+npm run build:css
+npm run build:css:cli

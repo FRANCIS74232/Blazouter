@@ -1,0 +1,119 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+    <PropertyGroup>
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <AnalysisLevel>preview</AnalysisLevel>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DefaultLanguage>en-GB</DefaultLanguage>
+        <RazorLangVersion>8.0</RazorLangVersion>
+        <RootNamespace>Blazouter</RootNamespace>
+        <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+        <UseRazorSourceGenerator>true</UseRazorSourceGenerator>
+        <TargetFrameworks>net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
+        <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+    </PropertyGroup>
+
+    <!-- AOT Support for .NET 7.0+ -->
+    <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0' OR '$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'net10.0'">
+        <EnableAotAnalyzer Condition="'$(TargetFramework)' == 'net8.0' OR '$(TargetFramework)' == 'net9.0' OR '$(TargetFramework)' == 'net10.0'">true</EnableAotAnalyzer>
+        <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+        <IlcGenerateCompleteTypeMetadata>false</IlcGenerateCompleteTypeMetadata>
+        <PublishAot Condition="'$(RuntimeIdentifier)' != ''">true</PublishAot>
+        <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings>
+        <EnableSingleFileAnalyzer>true</EnableSingleFileAnalyzer>
+        <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+        <IsAotCompatible>true</IsAotCompatible>
+        <IlcTrimMetadata>true</IlcTrimMetadata>
+        <IsTrimmable>true</IsTrimmable>
+        <TrimMode>link</TrimMode>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <ApplicationIcon>Resources\Blazouter.ico</ApplicationIcon>
+        <Version>1.0.9</Version>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Blazouter - React Router-like Routing for Blazor</Title>
+        <PackageId>Blazouter</PackageId>
+        <Authors>Taiizor</Authors>
+        <Product>Blazouter</Product>
+        <Copyright>Copyright © $([System.DateTime]::Today.ToString(yyyy)) $(Authors)</Copyright>
+        <Summary>React Router-like routing library for Blazor with nested routes, guards, lazy loading, and transitions.</Summary>
+        <Description>A powerful React Router-like routing library for Blazor applications. Blazouter brings advanced routing features to Blazor including nested routes, route guards, lazy loading, smooth transitions, and programmatic navigation. This is the core library that works with all Blazor hosting models (Web, Server, WebAssembly and Hybrid/MAUI).</Description>
+        <PackageReadmeFile>README.MD</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageLicenseExpression></PackageLicenseExpression>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageReleaseNotes>See CHANGELOG.md: https://github.com/Taiizor/Blazouter/blob/develop/CHANGELOG.md</PackageReleaseNotes>
+        <PackageTags>blazor;routing;router;react-router;nested-routes;route-guards;lazy-loading;spa;web;server;hybrid;webassembly;blazor-server;blazor-wasm;blazor-hybrid;maui;navigation;transitions;aot;blazouter</PackageTags>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <!--<DocumentationFile>..\$(Title)\bin$(OutputPath)\$(Configuration)\$(TargetFramework)\$(Title).xml</DocumentationFile>-->
+        <PackageProjectUrl>https://github.com/Taiizor/Blazouter</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>git://github.com/Taiizor/Blazouter</RepositoryUrl>
+        <PackageDescription>$(Description)</PackageDescription>
+        <PackageIcon>Blazouter.png</PackageIcon>
+        <Company>$(Authors)</Company>
+        <Owners>$(Authors)</Owners>
+        <AnalysisLevel>preview</AnalysisLevel>
+        <LangVersion>preview</LangVersion>
+        <NeutralLanguage>$(DefaultLanguage)</NeutralLanguage>
+        <FileVersion>$(Version)</FileVersion>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <Configurations>Debug;Release</Configurations>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub">
+            <Version>8.0.0</Version>
+            <PrivateAssets>All</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Condition="$(TargetFramework.StartsWith('net6'))" Include="Microsoft.AspNetCore.Components.Web" Version="6.0.36" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net7'))" Include="Microsoft.AspNetCore.Components.Web" Version="7.0.20" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net8'))" Include="Microsoft.AspNetCore.Components.Web" Version="8.0.22" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net9'))" Include="Microsoft.AspNetCore.Components.Web" Version="9.0.11" />
+        <PackageReference Condition="$(TargetFramework.StartsWith('net10'))" Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="README.MD">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\LICENSE">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="..\..\CHANGELOG.md">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+        <None Include="Resources\Blazouter.png">
+            <Pack>True</Pack>
+            <PackagePath></PackagePath>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Properties\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Blazouter.Web" />
+        <InternalsVisibleTo Include="Blazouter.Hybrid" />
+        <InternalsVisibleTo Include="Blazouter.Server" />
+        <InternalsVisibleTo Include="Blazouter.WebAssembly" />
+    </ItemGroup>
+
+</Project>

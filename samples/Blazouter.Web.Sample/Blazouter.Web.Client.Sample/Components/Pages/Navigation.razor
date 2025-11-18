@@ -1,0 +1,110 @@
+@inject RouterNavigationService NavService
+
+<div class="px-4 py-8">
+	<div class="max-w-4xl mx-auto">
+		<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">🔗 Programmatic Navigation</h1>
+		<p class="text-gray-600 dark:text-gray-400 mb-8">
+			Demonstrates the RouterNavigationService for imperative navigation
+		</p>
+
+		<!-- Basic Navigation -->
+		<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+			<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Basic Navigation</h2>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Navigate to different routes programmatically using the NavigationService
+			</p>
+			<div class="flex flex-wrap gap-3 mb-4">
+				<button @onclick='@(() => NavService.NavigateTo("/"))'
+						class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+					Go to Home
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/about"))'
+						class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+					Go to About
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/users"))'
+						class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+					Go to Users
+				</button>
+			</div>
+			<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+				<pre class="text-sm"><code class="text-gray-300">@@inject RouterNavigationService NavService
+
+&lt;button @@onclick="@@(() => NavService.NavigateTo("/about"))"&gt;
+    Go to About
+&lt;/button&gt;</code></pre>
+			</div>
+		</div>
+
+		<!-- Navigation with Parameters -->
+		<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+			<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Navigation with Parameters</h2>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Navigate to routes with dynamic parameters
+			</p>
+			<div class="flex flex-wrap gap-3 mb-4">
+				<button @onclick='@(() => NavService.NavigateTo("/users/1"))'
+						class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+					User 1
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/users/2"))'
+						class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+					User 2
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/users/3"))'
+						class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+					User 3
+				</button>
+			</div>
+			<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+				<pre class="text-sm"><code class="text-gray-300">NavService.NavigateTo($"/users/{userId}");</code></pre>
+			</div>
+		</div>
+
+		<!-- Navigation with Query Strings -->
+		<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
+			<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Navigation with Query Strings</h2>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Add query parameters to your navigation
+			</p>
+			<div class="flex flex-wrap gap-3 mb-4">
+				<button @onclick='@(() => NavService.NavigateTo("/users?sort=name&order=asc"))'
+						class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+					Sort by Name
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/users?sort=date&order=desc"))'
+						class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+					Sort by Date
+				</button>
+				<button @onclick='@(() => NavService.NavigateTo("/users?filter=active&page=2"))'
+						class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+					Active Users
+				</button>
+			</div>
+			<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+				<pre class="text-sm"><code class="text-gray-300">NavService.NavigateTo("/users?sort=name&order=asc");</code></pre>
+			</div>
+		</div>
+
+		<!-- Conditional Navigation -->
+		<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-gray-200 dark:border-gray-700">
+			<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Conditional Navigation</h2>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Navigate based on conditions or user actions
+			</p>
+			<div class="space-y-4">
+				<select @bind="_selectedRoute" class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg">
+					<option value="/">Home</option>
+					<option value="/about">About</option>
+					<option value="/users">Users</option>
+					<option value="/protected">Protected</option>
+					<option value="/lazy">Lazy Load</option>
+				</select>
+				<button @onclick="NavigateToSelected"
+						class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+					Navigate to Selected
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
