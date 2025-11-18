@@ -548,25 +548,58 @@ Blazouter/
 │   │   ├── Services/              # Routing services
 │   │   └── wwwroot/               # CSS and assets
 │   ├── Blazouter.Server/          # Server-specific extensions
-│   │   └── Extensions/            # Server integration
+│   │   ├── Components/            # Server components
+│   │   ├── Extensions/            # Server integration
+│   │   └── Pages/                 # Server pages
 │   ├── Blazouter.WebAssembly/     # WebAssembly-specific extensions
 │   │   └── Extensions/            # WASM integration
+│   ├── Blazouter.Web/             # Web-specific extensions
+│   │   ├── Extensions/            # Web integration
+│   │   └── Pages/                 # Web pages
 │   └── Blazouter.Hybrid/          # Hybrid/MAUI-specific extensions
 │       └── Extensions/            # MAUI integration
 └── samples/
-    └── Blazouter.Sample/          # Sample application
+    ├── Blazouter.Server.Sample/       # Server sample app
+    ├── Blazouter.WebAssembly.Sample/  # WebAssembly sample app
+    ├── Blazouter.Hybrid.Sample/       # Hybrid/MAUI sample app
+    └── Blazouter.Web.Sample/          # Web (Server + WASM) sample app
+        ├── Blazouter.Web.Sample/          # Server project
+        └── Blazouter.Web.Client.Sample/  # Client project
 ```
 
-## 🎮 Running the Sample
+## 🎮 Running the Samples
 
-To see Blazouter in action:
+Blazouter includes multiple sample applications for different hosting models:
+
+**Blazor Server Sample:**
 
 ```bash
-cd samples/Blazouter.Sample
+cd samples/Blazouter.Server.Sample
 dotnet run
 ```
 
-Then navigate to `https://localhost:5001` in your browser.
+**Blazor WebAssembly Sample:**
+
+```bash
+cd samples/Blazouter.WebAssembly.Sample
+dotnet run
+```
+
+**Blazor Hybrid Sample (MAUI):**
+
+```bash
+cd samples/Blazouter.Hybrid.Sample
+dotnet build -t:Run -f net9.0-windows10.0.19041.0
+```
+
+**Blazor Web Sample (.NET 8+ with Server + WASM):**
+
+```bash
+cd samples/Blazouter.Web.Sample/Blazouter.Web.Sample
+dotnet run
+```
+
+Then navigate to the URL shown in your terminal (typically `https://localhost:5001` or `http://localhost:5000`).
 
 ## 🤝 Contributing
 
@@ -581,7 +614,7 @@ This project is licensed under the MIT License.
 - **Supported .NET versions**: .NET 6.0, 7.0, 8.0, 9.0, 10.0
 - **Platforms**: Blazor WebAssembly, Blazor Server, Blazor Hybrid (MAUI)
 - **License**: MIT
-- **Packages**: 
+- **Packages**:
   - [Blazouter](https://www.nuget.org/packages/Blazouter/) (Core)
   - [Blazouter.Server](https://www.nuget.org/packages/Blazouter.Server/)
   - [Blazouter.Hybrid](https://www.nuget.org/packages/Blazouter.Hybrid/)
@@ -593,7 +626,7 @@ This project is licensed under the MIT License.
 - [Issue Tracker](https://github.com/Taiizor/Blazouter/issues)
 - [Documentation](https://github.com/Taiizor/Blazouter/blob/develop/FEATURES.md)
 - [Contributing Guide](https://github.com/Taiizor/Blazouter/blob/develop/CONTRIBUTING.md)
-- [Sample Application](https://github.com/Taiizor/Blazouter/tree/develop/samples/Blazouter.Sample)
+- [Sample Applications](https://github.com/Taiizor/Blazouter/tree/develop/samples)
 
 ## 🙏 Acknowledgments
 
