@@ -12,7 +12,7 @@ namespace Blazouter.Server.Sample.Components.Pages.AttributeRoutingExamples
     [RouteTitle("Dynamic Params")]
     [RouteTransition(RouteTransition.Fade)]
     [Route("/attribute-examples/user/:userId/post/:postId")]
-    public partial class DynamicParamsExample : ComponentBase
+    public partial class DynamicParamsExample : ComponentBase, IDisposable
     {
         [Inject] private RouterStateService RouterState { get; set; } = default!;
         [Inject] private RouterNavigationService NavigationService { get; set; } = default!;
@@ -22,6 +22,18 @@ namespace Blazouter.Server.Sample.Components.Pages.AttributeRoutingExamples
 
         protected override void OnInitialized()
         {
+            UpdateParameters();
+            RouterState.OnRouteChanged += HandleRouteChanged;
+        }
+
+        private void HandleRouteChanged(RouteMatch? match)
+        {
+            UpdateParameters();
+            StateHasChanged();
+        }
+
+        private void UpdateParameters()
+        {
             UserId = RouterState.GetParam("userId") ?? "not set";
             PostId = RouterState.GetParam("postId") ?? "not set";
         }
@@ -29,6 +41,11 @@ namespace Blazouter.Server.Sample.Components.Pages.AttributeRoutingExamples
         private void NavigateTo(string userId, string postId)
         {
             NavigationService.NavigateTo($"/attribute-examples/user/{userId}/post/{postId}");
+        }
+
+        public void Dispose()
+        {
+            RouterState.OnRouteChanged -= HandleRouteChanged;
         }
     }
 }

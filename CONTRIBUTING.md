@@ -39,9 +39,22 @@ dotnet restore
 # Build the project
 dotnet build
 
-# Run the sample application
-cd samples/Blazouter.Sample
+# Run a sample application (choose one):
+# For Server sample:
+cd samples/Blazouter.Server.Sample
 dotnet run
+
+# For WebAssembly sample:
+# cd samples/Blazouter.WebAssembly.Sample
+# dotnet run
+
+# For Hybrid sample (MAUI):
+# cd samples/Blazouter.Hybrid.Sample
+# dotnet build -t:Run -f net9.0-windows10.0.19041.0
+
+# For Web sample (.NET 8+ with Server + WASM):
+# cd samples/Blazouter.Web.Sample/Blazouter.Web.Sample
+# dotnet run
 ```
 
 ### Coding Guidelines
