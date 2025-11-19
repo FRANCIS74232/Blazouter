@@ -18,4 +18,8 @@
         <ProjectReference Include="..\..\..\src\Blazouter.WebAssembly\Blazouter.WebAssembly.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="Blazouter.Web.Sample" />
+    </ItemGroup>
+
 </Project>

@@ -1,0 +1,49 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+	<h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Route Transitions Example</h2>
+
+	<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+		<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Component Configuration</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-4">This page uses a custom transition effect:</p>
+
+		<div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 font-mono text-sm mb-4">
+			<div class="text-green-600 dark:text-green-400">// TransitionsExample.razor.cs</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">Route</span>(<span class="text-orange-600 dark:text-orange-400">"/attribute-examples/transitions"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTitle</span>(<span class="text-orange-600 dark:text-orange-400">"Transitions Example"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTransition</span>(RouteTransition.<span class="text-purple-600 dark:text-purple-400">Slide</span>)]</div>
+		</div>
+
+		<div class="space-y-3">
+			<div class="flex items-start">
+				<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 mr-3 mt-0.5">⚡</span>
+				<div>
+					<strong class="text-gray-900 dark:text-white">Slide Transition:</strong>
+					<p class="text-gray-600 dark:text-gray-400">Applied when navigating to this page</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-xl p-6">
+		<h3 class="text-lg font-semibold text-purple-900 dark:text-purple-100 mb-3">🎨 Available Transitions</h3>
+		<div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-purple-800 dark:text-purple-200">
+			<div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+				<code class="text-sm">Fade</code>
+			</div>
+			<div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+				<code class="text-sm">Slide</code>
+			</div>
+			<div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+				<code class="text-sm">Scale</code>
+			</div>
+			<div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+				<code class="text-sm">Flip</code>
+			</div>
+			<div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+				<code class="text-sm">Rotate</code>
+			</div>
+			<div class="bg-white/50 dark:bg-gray-800/50 p-3 rounded-lg">
+				<code class="text-sm">Blur</code>
+			</div>
+		</div>
+	</div>
+</div>

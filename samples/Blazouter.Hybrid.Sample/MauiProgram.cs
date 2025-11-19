@@ -22,6 +22,9 @@ namespace Blazouter.Hybrid.Sample
 
             builder.Services.AddMauiBlazorWebView();
 
+            // Register sample services
+            builder.Services.AddSingleton<AuthService>();
+
             builder.Services.AddBlazorWebViewDeveloperTools();
 
             // Register custom error handler for routing errors

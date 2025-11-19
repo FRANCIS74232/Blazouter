@@ -11,15 +11,15 @@
             either BOTH runtimes must be indicated or ONLY macatalyst-x64. -->
         <!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
-        <OutputType>Exe</OutputType>
-        <RootNamespace>Blazouter.Hybrid.Sample</RootNamespace>
         <UseMaui>true</UseMaui>
+        <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
         <LangVersion>preview</LangVersion>
         <SingleProject>true</SingleProject>
         <AnalysisLevel>preview</AnalysisLevel>
         <ImplicitUsings>enable</ImplicitUsings>
         <EnableDefaultCssItems>false</EnableDefaultCssItems>
-        <Nullable>enable</Nullable>
+        <RootNamespace>Blazouter.Hybrid.Sample</RootNamespace>
 
         <!-- Display name -->
         <ApplicationTitle>Blazouter.Hybrid.Sample</ApplicationTitle>

@@ -1,0 +1,41 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+	<h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Basic Attribute Routing</h2>
+
+	<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+		<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Component Configuration</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-4">This page demonstrates the simplest form of attribute-based routing:</p>
+
+		<div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 font-mono text-sm mb-4">
+			<div class="text-green-600 dark:text-green-400">// BasicExample.razor.cs</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">Route</span>(<span class="text-orange-600 dark:text-orange-400">"/attribute-examples/basic"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTitle</span>(<span class="text-orange-600 dark:text-orange-400">"Basic Example"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200"><span class="text-purple-600 dark:text-purple-400">public partial class</span> BasicExample</div>
+		</div>
+
+		<div class="space-y-3">
+			<div class="flex items-start">
+				<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 mr-3 mt-0.5">✓</span>
+				<div>
+					<strong class="text-gray-900 dark:text-white">Route Path:</strong>
+					<p class="text-gray-600 dark:text-gray-400">Defined with <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">[Route]</code> attribute</p>
+				</div>
+			</div>
+			<div class="flex items-start">
+				<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 mr-3 mt-0.5">✓</span>
+				<div>
+					<strong class="text-gray-900 dark:text-white">Page Title:</strong>
+					<p class="text-gray-600 dark:text-gray-400">Set with <code class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded">[RouteTitle]</code> attribute</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl p-6">
+		<h3 class="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">💡 Key Points</h3>
+		<ul class="space-y-2 text-blue-800 dark:text-blue-200">
+			<li>• No programmatic route configuration needed in App.razor.cs</li>
+			<li>• Route configuration is co-located with the component</li>
+			<li>• Automatically discovered with <code class="px-2 py-1 bg-blue-100 dark:bg-blue-800 rounded">.AddAttributeRoutes()</code></li>
+		</ul>
+	</div>
+</div>

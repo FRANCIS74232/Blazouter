@@ -1,0 +1,48 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+	<h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Route Guards Example</h2>
+
+	<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+		<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Component Configuration</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-4">This page is protected by an authentication guard:</p>
+
+		<div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 font-mono text-sm mb-4">
+			<div class="text-green-600 dark:text-green-400">// GuardsExample.razor.cs</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">Route</span>(<span class="text-orange-600 dark:text-orange-400">"/attribute-examples/guards"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTitle</span>(<span class="text-orange-600 dark:text-orange-400">"Guards Example"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteGuard</span>(<span class="text-purple-600 dark:text-purple-400">typeof</span>(AuthGuard))]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTransition</span>(RouteTransition.<span class="text-purple-600 dark:text-purple-400">Rotate</span>)]</div>
+		</div>
+
+		<div class="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-lg p-4 mb-4">
+			<h4 class="text-lg font-semibold text-green-900 dark:text-green-100 mb-2">✅ Access Granted!</h4>
+			<p class="text-green-800 dark:text-green-200">
+				You're seeing this page because the AuthGuard allowed access.
+				<span class="block mt-2 text-sm">Current auth status: <strong>@(AuthService.IsAuthenticated ? "Authenticated" : "Not Authenticated")</strong></span>
+			</p>
+		</div>
+
+		<div class="space-y-3">
+			<h4 class="text-lg font-semibold text-gray-900 dark:text-white">Authentication Controls:</h4>
+			<div class="flex gap-3">
+				<button @onclick="AuthService.Login"
+						class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+					Login
+				</button>
+				<button @onclick="AuthService.Logout"
+						class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
+					Logout
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl p-6">
+		<h3 class="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">🔒 How Guards Work</h3>
+		<ul class="space-y-2 text-blue-800 dark:text-blue-200">
+			<li>• Guards implement <code class="px-2 py-1 bg-blue-100 dark:bg-blue-800 rounded">IRouteGuard</code> interface</li>
+			<li>• Multiple guards can be applied to a single route</li>
+			<li>• Guards execute in the order they are declared</li>
+			<li>• Failed guards can redirect to a different route</li>
+		</ul>
+	</div>
+</div>

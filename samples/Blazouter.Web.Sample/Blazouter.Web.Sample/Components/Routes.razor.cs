@@ -1,8 +1,12 @@
+using Blazouter.Extensions;
 using Blazouter.Models;
 using Blazouter.Services;
 using Microsoft.AspNetCore.Components;
+using AuthGuard = Blazouter.Web.Client.Sample.Components.Guards.AuthGuard;
 using ClientPages = Blazouter.Web.Client.Sample.Components.Pages;
+using ClientProgram = Blazouter.Web.Client.Sample.Program;
 using ServerPages = Blazouter.Web.Sample.Components.Pages;
+using ServerProgram = Blazouter.Web.Sample.Program;
 
 namespace Blazouter.Web.Sample.Components
 {
@@ -10,38 +14,33 @@ namespace Blazouter.Web.Sample.Components
     {
         [Inject] private RouterNavigationService _navService { get; set; } = default!;
 
-        private List<RouteConfig> _routes =
-        [
-            new RouteConfig
-            {
+        private readonly List<RouteConfig> _routes = new List<RouteConfig>
+        {
+            new() {
                 Path = "/",
                 Component = typeof(ServerPages.Home),
                 Title = "Home",
                 Transition = RouteTransition.Blur
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/about",
                 Component = typeof(ClientPages.About),
                 Title = "About",
                 Transition = RouteTransition.Fade
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/navigation",
                 Component = typeof(ClientPages.Navigation),
                 Title = "Navigation Demo",
                 Transition = RouteTransition.Flip
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/transitions",
                 Component = typeof(ClientPages.Transitions),
                 Title = "Transitions Demo",
                 Transition = RouteTransition.Lift
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/users",
                 Component = typeof(ClientPages.Users.UserLayout),
                 Title = "Users",
@@ -63,16 +62,14 @@ namespace Blazouter.Web.Sample.Components
                     }
                 ]
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/protected",
                 Component = typeof(ClientPages.Protected),
                 Title = "Protected Page",
-                Guards = [typeof(Guards.AuthGuard)],
+                Guards = [typeof(AuthGuard)],
                 Transition = RouteTransition.Rotate
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/lazy",
                 ComponentLoader = async () =>
                 {
@@ -82,15 +79,13 @@ namespace Blazouter.Web.Sample.Components
                 Title = "Lazy Loaded Page",
                 Transition = RouteTransition.Curtain
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/error-example",
                 Component = typeof(ClientPages.ErrorExample),
                 Title = "Error Example",
                 Transition = RouteTransition.Spotlight
             },
-            new RouteConfig
-            {
+            new() {
                 Path = "/test-error",
                 ComponentLoader = async () =>
                 {
@@ -116,6 +111,6 @@ namespace Blazouter.Web.Sample.Components
                 },
                 Title = "Test Error"
             }
-        ];
+        }.AddAttributeRoutes(typeof(ServerProgram).Assembly, typeof(ClientProgram).Assembly);
     }
 }

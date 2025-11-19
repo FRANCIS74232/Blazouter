@@ -10,10 +10,10 @@ namespace Blazouter.Web.Client.Sample
         {
             WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
             // Register custom error handler for routing errors
             builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
+
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }

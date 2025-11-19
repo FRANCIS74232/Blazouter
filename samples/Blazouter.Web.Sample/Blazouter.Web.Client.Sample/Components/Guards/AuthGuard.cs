@@ -1,7 +1,7 @@
 using Blazouter.Guards;
 using Blazouter.Models;
 
-namespace Blazouter.Web.Sample.Components.Guards
+namespace Blazouter.Web.Client.Sample.Components.Guards
 {
     /// <summary>
     /// Sample authentication guard for demonstration

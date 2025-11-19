@@ -18,6 +18,9 @@ namespace Blazouter.Server.Sample
             // Add Blazouter services
             builder.Services.AddBlazouter();
 
+            // Register sample services
+            builder.Services.AddSingleton<AuthService>();
+
             // Register custom error handler for routing errors
             builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
 

@@ -1,0 +1,48 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+	<h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Custom Route Data Example</h2>
+
+	<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+		<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Component Configuration</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-4">This page demonstrates custom route data storage:</p>
+
+		<div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 font-mono text-sm mb-4">
+			<div class="text-green-600 dark:text-green-400">// CustomDataExample.razor.cs</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">Route</span>(<span class="text-orange-600 dark:text-orange-400">"/attribute-examples/custom-data"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTitle</span>(<span class="text-orange-600 dark:text-orange-400">"Custom Data"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteData</span>(<span class="text-orange-600 dark:text-orange-400">"Section"</span>, <span class="text-orange-600 dark:text-orange-400">"Examples"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteData</span>(<span class="text-orange-600 dark:text-orange-400">"Category"</span>, <span class="text-orange-600 dark:text-orange-400">"Advanced"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteData</span>(<span class="text-orange-600 dark:text-orange-400">"Priority"</span>, <span class="text-purple-600 dark:text-purple-400">3</span>)]</div>
+		</div>
+
+		<div class="bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-4">
+			<h4 class="text-lg font-semibold text-amber-900 dark:text-amber-100 mb-3">📦 Custom Route Data:</h4>
+			<dl class="space-y-2">
+				@if (RouteData != null)
+				{
+					@foreach (var item in RouteData)
+					{
+						<div class="flex">
+							<dt class="font-semibold text-amber-700 dark:text-amber-300 w-32">@item.Key:</dt>
+							<dd class="text-amber-900 dark:text-amber-100">@item.Value</dd>
+						</div>
+					}
+				}
+				else
+				{
+					<p class="text-amber-700 dark:text-amber-300">No custom data available</p>
+				}
+			</dl>
+		</div>
+	</div>
+
+	<div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl p-6">
+		<h3 class="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">💡 Use Cases</h3>
+		<ul class="space-y-2 text-blue-800 dark:text-blue-200">
+			<li>• Store metadata about the route (section, category, etc.)</li>
+			<li>• Add configuration flags for route behavior</li>
+			<li>• Attach analytics or tracking information</li>
+			<li>• Store permissions or role requirements</li>
+			<li>• Multiple <code class="px-2 py-1 bg-blue-100 dark:bg-blue-800 rounded">[RouteData]</code> attributes can be applied</li>
+		</ul>
+	</div>
+</div>

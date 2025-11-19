@@ -96,13 +96,39 @@ namespace Blazouter.Services
         }
 
         /// <summary>
-        /// Recursively matches a route by traversing the route tree
+        /// Recursively matches a route by traversing the route tree to find the best match for the given path.
         /// </summary>
-        /// <param name="path">The normalized path to match</param>
-        /// <param name="routes">The route configurations to search</param>
-        /// <param name="query">Parsed query string parameters</param>
-        /// <param name="parentPath">The parent route path for building nested paths</param>
-        /// <returns>The matched route with parameters, or null if no match found</returns>
+        /// <param name="path">The normalized path to match (without query string, with leading slash).</param>
+        /// <param name="routes">The collection of route configurations to search at the current level.</param>
+        /// <param name="query">Parsed query string parameters from the original URL.</param>
+        /// <param name="parentPath">The accumulated parent route path for building complete nested paths.</param>
+        /// <returns>
+        /// A <see cref="RouteMatch"/> object containing the matched route and all extracted parameters,
+        /// or null if no route in the collection matches the path.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method implements the core routing algorithm for Blazouter. It performs a depth-first
+        /// search through the route tree, trying to match the URL path against each route's pattern
+        /// and its children recursively.
+        /// </para>
+        /// <para>
+        /// The matching algorithm works as follows:
+        /// </para>
+        /// <list type="number">
+        /// <item><description>Iterate through routes in order (first match wins)</description></item>
+        /// <item><description>Build the complete route path by combining parent and child paths</description></item>
+        /// <item><description>Check for redirects - if found, return immediately with redirect info</description></item>
+        /// <item><description>Try to match the path against the route pattern (exact or partial)</description></item>
+        /// <item><description>If route has Exact=true, verify it's an exact match</description></item>
+        /// <item><description>If route has children, recursively search them for a deeper match</description></item>
+        /// <item><description>Return the deepest match found, or parent if no child matches</description></item>
+        /// </list>
+        /// <para>
+        /// For nested routes, the method creates a hierarchy of RouteMatch objects linked through the
+        /// Child property, representing the complete matched path from root to leaf.
+        /// </para>
+        /// </remarks>
         private RouteMatch? MatchRouteRecursive(string path, List<RouteConfig> routes, Dictionary<string, string> query, string parentPath)
         {
             foreach (RouteConfig route in routes)
@@ -189,11 +215,34 @@ namespace Blazouter.Services
         }
 
         /// <summary>
-        /// Builds a full route path by combining parent and child paths
+        /// Builds a full route path by combining parent and child paths with proper slash normalization.
         /// </summary>
-        /// <param name="parent">The parent route path</param>
-        /// <param name="child">The child route path</param>
-        /// <returns>The combined route path with proper slash handling</returns>
+        /// <param name="parent">The parent route path (may be empty for root-level routes).</param>
+        /// <param name="child">The child route path to append to the parent.</param>
+        /// <returns>
+        /// The combined route path with normalized slashes, ensuring proper path formation.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method handles various edge cases in path construction:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Empty parent: Returns child with leading slash (e.g., "" + "users" → "/users")</description></item>
+        /// <item><description>Empty child: Returns parent as-is (e.g., "/users" + "" → "/users")</description></item>
+        /// <item><description>Both non-empty: Combines with single slash (e.g., "/users" + ":id" → "/users/:id")</description></item>
+        /// <item><description>Trailing/leading slashes: Normalized to prevent double slashes</description></item>
+        /// </list>
+        /// <para>
+        /// Examples of path building:
+        /// </para>
+        /// <code>
+        /// BuildRoutePath("", "users")        → "/users"
+        /// BuildRoutePath("/", "users")       → "/users"
+        /// BuildRoutePath("/users", ":id")    → "/users/:id"
+        /// BuildRoutePath("/users/", ":id")   → "/users/:id"
+        /// BuildRoutePath("/api", "v1/users") → "/api/v1/users"
+        /// </code>
+        /// </remarks>
         private string BuildRoutePath(string parent, string child)
         {
             if (string.IsNullOrEmpty(parent))
@@ -213,12 +262,45 @@ namespace Blazouter.Services
         }
 
         /// <summary>
-        /// Checks if an actual path matches a route pattern exactly (same number of segments)
+        /// Checks if an actual path matches a route pattern exactly with the same number of segments.
         /// </summary>
-        /// <param name="actualPath">The actual URL path from the browser</param>
-        /// <param name="routePath">The route pattern to match against (may contain parameters like :id)</param>
-        /// <param name="parameters">Output dictionary containing extracted route parameters</param>
-        /// <returns>True if the path matches exactly, false otherwise</returns>
+        /// <param name="actualPath">The actual URL path from the browser (e.g., "/users/123").</param>
+        /// <param name="routePath">The route pattern to match against (e.g., "/users/:id").</param>
+        /// <param name="parameters">
+        /// When this method returns true, contains a dictionary of extracted route parameters.
+        /// Parameter names (keys) do not include the ':' prefix. Values are URL-decoded.
+        /// </param>
+        /// <returns>
+        /// true if the actual path matches the route pattern exactly (same number of segments,
+        /// all static segments match, dynamic parameters extracted); false otherwise.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method performs strict segment-by-segment matching with these rules:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description><strong>Segment count:</strong> Must be identical (e.g., "/a/b" matches "/users/:id" but not "/users")</description></item>
+        /// <item><description><strong>Static segments:</strong> Must match exactly and case-sensitively</description></item>
+        /// <item><description><strong>Dynamic parameters:</strong> Segments starting with ':' match any value</description></item>
+        /// <item><description><strong>Wildcards:</strong> '*' segment matches any single segment</description></item>
+        /// <item><description><strong>Root path:</strong> "/" is treated as zero segments, matching empty patterns</description></item>
+        /// </list>
+        /// <para>
+        /// Examples of matching:
+        /// </para>
+        /// <code>
+        /// PathMatches("/users/123", "/users/:id", out var p)     → true,  p["id"] = "123"
+        /// PathMatches("/users/123/edit", "/users/:id", out var p) → false (too many segments)
+        /// PathMatches("/users", "/users/:id", out var p)          → false (too few segments)
+        /// PathMatches("/users/123", "/posts/:id", out var p)      → false (static mismatch)
+        /// PathMatches("/api/v1/users", "/api/*/users", out var p) → true  (wildcard matches "v1")
+        /// PathMatches("/", "/", out var p)                        → true  (root matches root)
+        /// </code>
+        /// <para>
+        /// Parameter values are automatically URL-decoded, so encoded characters like %20 (space)
+        /// are converted to their actual characters.
+        /// </para>
+        /// </remarks>
         private bool PathMatches(string actualPath, string routePath, out Dictionary<string, string> parameters)
         {
             parameters = [];
@@ -274,12 +356,45 @@ namespace Blazouter.Services
         }
 
         /// <summary>
-        /// Checks if an actual path partially matches a route pattern (for nested routes)
+        /// Checks if an actual path partially matches a route pattern, used for parent routes with children.
         /// </summary>
-        /// <param name="actualPath">The actual URL path from the browser</param>
-        /// <param name="routePath">The route pattern to match against</param>
-        /// <param name="parameters">Output dictionary containing extracted route parameters</param>
-        /// <returns>True if the path matches the route pattern partially, false otherwise</returns>
+        /// <param name="actualPath">The actual URL path from the browser (e.g., "/users/123/profile").</param>
+        /// <param name="routePath">The route pattern to match against (e.g., "/users/:id").</param>
+        /// <param name="parameters">
+        /// When this method returns true, contains a dictionary of extracted route parameters from
+        /// the matched segments. Parameter names (keys) do not include the ':' prefix. Values are URL-decoded.
+        /// </param>
+        /// <returns>
+        /// true if the actual path starts with segments that match the route pattern; false otherwise.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// Partial matching is essential for nested routing. It allows parent routes to match when the URL
+        /// has additional segments that will be matched by child routes. Unlike <see cref="PathMatches"/>,
+        /// this method only requires that the beginning of the path matches the route pattern.
+        /// </para>
+        /// <para>
+        /// The actual path must have at least as many segments as the route pattern, but can have more.
+        /// All route pattern segments must match their corresponding actual path segments.
+        /// </para>
+        /// <para>
+        /// Examples of partial matching:
+        /// </para>
+        /// <code>
+        /// // Parent route pattern: "/users/:id"
+        /// PathMatchesPartially("/users/123", "/users/:id", out var p)          → true,  p["id"] = "123"
+        /// PathMatchesPartially("/users/123/profile", "/users/:id", out var p)  → true,  p["id"] = "123" (extra segment ignored)
+        /// PathMatchesPartially("/users", "/users/:id", out var p)               → false (not enough segments)
+        /// PathMatchesPartially("/posts/123", "/users/:id", out var p)           → false (static mismatch)
+        /// 
+        /// // The extra "/profile" segment would be matched by a child route
+        /// </code>
+        /// <para>
+        /// This method is used in combination with child route matching. When a parent route partially
+        /// matches, the routing algorithm continues to search the parent's children for a complete match
+        /// of the remaining path segments.
+        /// </para>
+        /// </remarks>
         private bool PathMatchesPartially(string actualPath, string routePath, out Dictionary<string, string> parameters)
         {
             parameters = [];
@@ -320,11 +435,45 @@ namespace Blazouter.Services
         }
 
         /// <summary>
-        /// Checks if an actual path matches a route pattern exactly in terms of structure and segment count
+        /// Checks if an actual path matches a route pattern exactly in terms of structure and segment count,
+        /// used for enforcing exact matching requirements.
         /// </summary>
-        /// <param name="actualPath">The actual URL path from the browser</param>
-        /// <param name="routePath">The route pattern to match against</param>
-        /// <returns>True if the path structure matches exactly, false otherwise</returns>
+        /// <param name="actualPath">The actual URL path from the browser (e.g., "/users/123").</param>
+        /// <param name="routePath">The route pattern to match against (e.g., "/users/:id").</param>
+        /// <returns>
+        /// true if the paths have the same number of segments and all static segments match exactly;
+        /// false otherwise.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method is used to enforce exact matching when a route has Exact=true in its configuration.
+        /// It verifies that the path structure is identical without extracting or returning parameters
+        /// (unlike <see cref="PathMatches"/>).
+        /// </para>
+        /// <para>
+        /// The validation logic:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Both paths must have identical segment counts</description></item>
+        /// <item><description>Static segments must match exactly and case-sensitively</description></item>
+        /// <item><description>Dynamic parameter positions (:param) are accepted as matches</description></item>
+        /// <item><description>No parameter extraction is performed</description></item>
+        /// </list>
+        /// <para>
+        /// This is faster than PathMatches since it doesn't extract parameters, making it ideal for
+        /// the quick validation check needed when a route specifies Exact=true.
+        /// </para>
+        /// <para>
+        /// Examples:
+        /// </para>
+        /// <code>
+        /// PathMatchesExactly("/users/123", "/users/:id")      → true
+        /// PathMatchesExactly("/users/123/edit", "/users/:id") → false (different lengths)
+        /// PathMatchesExactly("/users", "/users/:id")          → false (different lengths)
+        /// PathMatchesExactly("/posts/123", "/users/:id")      → false (static mismatch)
+        /// PathMatchesExactly("/", "/")                        → true
+        /// </code>
+        /// </remarks>
         private bool PathMatchesExactly(string actualPath, string routePath)
         {
             actualPath = actualPath.Trim('/');
@@ -353,10 +502,42 @@ namespace Blazouter.Services
         }
 
         /// <summary>
-        /// Parses a URL query string into a dictionary of key-value pairs
+        /// Parses a URL query string into a dictionary of key-value pairs.
         /// </summary>
-        /// <param name="queryString">The query string to parse (without the leading '?')</param>
-        /// <returns>A dictionary containing the parsed query parameters</returns>
+        /// <param name="queryString">
+        /// The query string to parse (without the leading '?' character). For example: "q=blazor&amp;page=2"
+        /// </param>
+        /// <returns>
+        /// A dictionary containing the parsed query parameters. Keys and values are URL-decoded.
+        /// Returns an empty dictionary if the query string is null, empty, or whitespace.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// The parser handles standard URL query string format with these characteristics:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Parameters are separated by '&amp;' characters</description></item>
+        /// <item><description>Each parameter is a key=value pair</description></item>
+        /// <item><description>Both keys and values are URL-decoded (e.g., %20 becomes space)</description></item>
+        /// <item><description>Parameters without '=' are ignored</description></item>
+        /// <item><description>Duplicate keys: last value wins (standard dictionary behavior)</description></item>
+        /// </list>
+        /// <para>
+        /// Examples:
+        /// </para>
+        /// <code>
+        /// ParseQueryString("q=blazor&amp;page=2")              → { "q": "blazor", "page": "2" }
+        /// ParseQueryString("search=hello%20world")         → { "search": "hello world" }
+        /// ParseQueryString("")                             → { } (empty dictionary)
+        /// ParseQueryString("q=blazor&amp;q=router")            → { "q": "router" } (last wins)
+        /// ParseQueryString("filter=price&amp;sort=asc&amp;limit=10") → { "filter": "price", "sort": "asc", "limit": "10" }
+        /// </code>
+        /// <para>
+        /// <strong>Note:</strong> This is a basic implementation. For more complex query string handling
+        /// (array parameters, multiple values per key, etc.), consider using a specialized query string
+        /// parsing library or enhancing this implementation.
+        /// </para>
+        /// </remarks>
         private Dictionary<string, string> ParseQueryString(string queryString)
         {
             Dictionary<string, string> result = [];

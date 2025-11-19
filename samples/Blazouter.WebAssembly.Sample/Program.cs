@@ -14,13 +14,16 @@ namespace Blazouter.WebAssembly.Sample
             builder.RootComponents.Add<App>("#app");
             builder.RootComponents.Add<HeadOutlet>("head::after");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
             // Add Blazouter services
             builder.Services.AddBlazouter();
 
+            // Register sample services
+            builder.Services.AddSingleton<AuthService>();
+
             // Register custom error handler for routing errors
             builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
+
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
         }

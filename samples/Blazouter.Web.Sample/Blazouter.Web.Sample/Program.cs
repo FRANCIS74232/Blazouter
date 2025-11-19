@@ -1,7 +1,7 @@
 using Blazouter.Extensions;
 using Blazouter.Server.Extensions;
+using Blazouter.Web.Client.Sample.Services;
 using Blazouter.Web.Sample.Components;
-using Blazouter.Web.Sample.Services;
 using Imports = Blazouter.Web.Client.Sample._Imports;
 
 namespace Blazouter.Web.Sample
@@ -19,6 +19,9 @@ namespace Blazouter.Web.Sample
 
             // Add Blazouter services
             builder.Services.AddBlazouter();
+
+            // Register sample services
+            builder.Services.AddSingleton<AuthService>();
 
             // Register custom error handler for routing errors
             builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();

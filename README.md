@@ -40,10 +40,12 @@ Blazouter addresses the limitations of traditional Blazor routing:
 - **🎯 Nested Routes**: Define complex hierarchical route structures easily
 - **⚡ Lazy Loading**: Load components on-demand for better performance
 - **🎭 Dynamic Components**: Load components dynamically based on routes
-- **🎨 Route Transitions**: Beautiful animations when navigating between routes
 - **🔒 Route Guards**: Protect routes with authentication and authorization logic
+- **🏷️ Attribute-Based Routing**: Declarative route configuration using attributes
 - **📐 Layout System**: Flexible layout management with default and per-route layouts
 - **🔗 Programmatic Navigation**: Navigate imperatively with enhanced navigation service
+- **⚠️ Error Handling**: Comprehensive error handling with custom error handlers and retry mechanisms
+- **🎨 Route Transitions**: Beautiful animations when navigating between routes with 14 built-in transition types
 
 ## 📦 Available Packages
 
@@ -317,6 +319,41 @@ app.MapRazorComponents<App>()
 
 ## 📖 Usage Examples
 
+### Attribute-Based Routing
+
+Define routes declaratively using attributes directly on your components:
+
+```csharp
+using Blazouter.Models;
+using Blazouter.Attributes;
+using Microsoft.AspNetCore.Components;
+
+[Route("/admin")]
+[RouteTitle("Admin Panel")]
+[RouteGuard(typeof(AuthGuard))]
+[RouteTransition(RouteTransition.Fade)]
+public class AdminPage : ComponentBase
+{
+    // Component implementation
+}
+```
+
+Enable attribute-based routes in your app:
+
+```csharp
+// In App.razor.cs or Routes.razor.cs
+private List<RouteConfig> _routes = new List<RouteConfig>()
+    .AddAttributeRoutes(typeof(App).Assembly);
+
+// Or mix with programmatic routes
+private List<RouteConfig> _routes = new List<RouteConfig>
+{
+    new RouteConfig { Path = "/", Component = typeof(Home) }
+}.AddAttributeRoutes(typeof(App).Assembly);
+```
+
+[**📚 Learn more about Attribute-Based Routing →**](ATTRIBUTE_ROUTING.md)
+
 ### Layouts
 
 Blazouter provides flexible layout management with `DefaultLayout` and per-route `Layout` properties.
@@ -509,7 +546,7 @@ new RouteConfig
 
 ## 🎨 Route Transitions
 
-Blazouter includes built-in transitions:
+Blazouter includes 14 built-in transitions for beautiful page navigation:
 
 - `Fade` - Fade in animation
 - `Scale` - Scale in animation
@@ -536,34 +573,93 @@ new RouteConfig
 }
 ```
 
+## ⚠️ Error Handling
+
+Blazouter provides comprehensive error handling capabilities to gracefully manage routing errors:
+
+### Built-in Error Handling
+
+Use the `ErrorContent` parameter in the Router component to display custom error pages:
+
+```razor
+<Router Routes="@_routes">
+    <ErrorContent Context="errorInfo">
+        <div class="error-page">
+            <h1>⚠️ Routing Error</h1>
+            <p><strong>@errorInfo.ErrorType</strong></p>
+            <p>@errorInfo.Message</p>
+            @if (errorInfo.Retry != null)
+            {
+                <button @onclick="@errorInfo.Retry">Try Again</button>
+            }
+        </div>
+    </ErrorContent>
+    <NotFound>
+        <h1>404 - Page Not Found</h1>
+    </NotFound>
+</Router>
+```
+
+### Custom Error Handlers
+
+Implement `IRouterErrorHandler` for custom error handling logic:
+
+```csharp
+public class CustomRouterErrorHandler : IRouterErrorHandler
+{
+    public Task HandleErrorAsync(RouterErrorContext context)
+    {
+        // Log error, send telemetry, etc.
+        Console.WriteLine($"Route error: {context.ErrorType} - {context.Message}");
+        return Task.CompletedTask;
+    }
+}
+
+// Register in Program.cs
+builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
+```
+
+### Error Types
+
+- `ComponentLoadFailed` - Component failed to load
+- `GuardRejected` - Route guard denied access
+- `NavigationFailed` - Navigation operation failed
+- `InvalidRoute` - Invalid route configuration
+
 ## 🏗️ Project Structure
 
 ```
 Blazouter/
 ├── src/
 │   ├── Blazouter/                 # Core library (required)
-│   │   ├── Components/            # Router components
+│   │   ├── Attributes/            # Route attribute definitions
+│   │   ├── Components/            # Router components (Router, RouterLink, RouterOutlet)
+│   │   │   └── Layouts/           # Built-in layout components
+│   │   ├── Extensions/            # Service collection extensions
 │   │   ├── Guards/                # Route guard interfaces
-│   │   ├── Models/                # Route models
-│   │   ├── Services/              # Routing services
-│   │   └── wwwroot/               # CSS and assets
+│   │   ├── Models/                # Route models (RouteConfig, RouteMatch, RouteTransition)
+│   │   ├── Resources/             # Embedded resources
+│   │   ├── Services/              # Routing services (RouterStateService, RouteMatcherService, etc.)
+│   │   └── wwwroot/               # CSS and assets (blazouter.css, blazouter.min.css)
 │   ├── Blazouter.Server/          # Server-specific extensions
-│   │   ├── Components/            # Server components
-│   │   ├── Extensions/            # Server integration
-│   │   └── Pages/                 # Server pages
+│   │   ├── Extensions/            # Server integration (AddBlazouterSupport)
+│   │   ├── Pages/                 # Server pages
+│   │   └── Resources/             # Embedded resources
 │   ├── Blazouter.WebAssembly/     # WebAssembly-specific extensions
-│   │   └── Extensions/            # WASM integration
-│   ├── Blazouter.Web/             # Web-specific extensions
+│   │   └── Resources/             # Embedded resources
+│   ├── Blazouter.Web/             # Web-specific extensions (DEPRECATED - use Server + WebAssembly)
 │   │   ├── Extensions/            # Web integration
-│   │   └── Pages/                 # Web pages
+│   │   ├── Pages/                 # Web pages
+│   │   └── Resources/             # Embedded resources
 │   └── Blazouter.Hybrid/          # Hybrid/MAUI-specific extensions
-│       └── Extensions/            # MAUI integration
+│       ├── Extensions/            # MAUI integration (AddBlazouterSupport)
+│       └── Resources/             # Embedded resources
 └── samples/
     ├── Blazouter.Server.Sample/       # Server sample app
     ├── Blazouter.WebAssembly.Sample/  # WebAssembly sample app
     ├── Blazouter.Hybrid.Sample/       # Hybrid/MAUI sample app
     └── Blazouter.Web.Sample/          # Web (Server + WASM) sample app
-        ├── Blazouter.Web.Sample/          # Server project
+        ├── Blazouter.Web.Sample/         # Server project
         └── Blazouter.Web.Client.Sample/  # Client project
 ```
 
