@@ -24,6 +24,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Include="bun.lock" Visible="false" />
         <None Include="package.json" Visible="false" />
         <None Include="Tailwind.txt" Visible="false" />
         <None Include="postcss.config.mjs" Visible="false" />

@@ -2,84 +2,84 @@
 @inject RouterNavigationService NavService
 
 <div class="mb-6">
-    <button @onclick='@(() => NavService.NavigateTo("/users"))' 
-            class="px-4 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors flex items-center">
-        ← Back to Users
-    </button>
+	<button @onclick='@(() => NavService.NavigateTo("/users"))'
+			class="px-4 py-2 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors flex items-center">
+		← Back to Users
+	</button>
 </div>
 
 @if (_user != null)
 {
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-        <!-- Header -->
-        <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
-            <div class="flex items-center">
-                <div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold">
-                    @_user.Initials
-                </div>
-                <div class="ml-6">
-                    <h2 class="text-3xl font-bold mb-2">@_user.Name</h2>
-                    <p class="text-blue-100">@_user.Email</p>
-                </div>
-            </div>
-        </div>
+	<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+		<!-- Header -->
+		<div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
+			<div class="flex items-center">
+				<div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold">
+					@_user.Initials
+				</div>
+				<div class="ml-6">
+					<h2 class="text-3xl font-bold mb-2">@_user.Name</h2>
+					<p class="text-blue-100">@_user.Email</p>
+				</div>
+			</div>
+		</div>
 
-        <!-- Content -->
-        <div class="p-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Role</h3>
-                    <p class="text-lg text-gray-900 dark:text-white">@_user.Role</p>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">User ID</h3>
-                    <p class="text-lg text-gray-900 dark:text-white">@_userId</p>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Department</h3>
-                    <p class="text-lg text-gray-900 dark:text-white">@_user.Department</p>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Status</h3>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100">
-                        Active
-                    </span>
-                </div>
-            </div>
+		<!-- Content -->
+		<div class="p-8">
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+				<div>
+					<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Role</h3>
+					<p class="text-lg text-gray-900 dark:text-white">@_user.Role</p>
+				</div>
+				<div>
+					<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">User ID</h3>
+					<p class="text-lg text-gray-900 dark:text-white">@_userId</p>
+				</div>
+				<div>
+					<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Department</h3>
+					<p class="text-lg text-gray-900 dark:text-white">@_user.Department</p>
+				</div>
+				<div>
+					<h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Status</h3>
+					<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100">
+						Active
+					</span>
+				</div>
+			</div>
 
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">About</h3>
-                <p class="text-gray-600 dark:text-gray-400">
-                    This is a detailed view of user @_user.Name. In a real application, you would fetch this data
-                    from an API using the route parameter. The user ID (@_userId) was extracted from the URL using
-                    the RouterStateService.
-                </p>
-            </div>
-        </div>
-    </div>
+			<div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+				<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">About</h3>
+				<p class="text-gray-600 dark:text-gray-400">
+					This is a detailed view of user @_user.Name. In a real application, you would fetch this data
+					from an API using the route parameter. The user ID (@_userId) was extracted from the URL using
+					the RouterStateService.
+				</p>
+			</div>
+		</div>
+	</div>
 
-    <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">🎯 Dynamic Route Parameters</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">
-            The user ID is extracted from the URL using <code class="px-2 py-1 bg-white dark:bg-gray-800 rounded">RouterStateService.GetParam("id")</code>
-        </p>
-        <div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
-            <pre class="text-sm"><code class="text-gray-300">@@inject RouterStateService RouterState
+	<div class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
+		<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">🎯 Dynamic Route Parameters</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-4">
+			The user ID is extracted from the URL using <code class="px-2 py-1 bg-white dark:bg-gray-800 rounded">RouterStateService.GetParam("id")</code>
+		</p>
+		<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+			<pre class="text-sm"><code class="text-gray-300">@@inject RouterStateService RouterState
 
-@@code {
-    private string? _userId;
+	@@code {
+	    private string? _userId;
 
-    protected override void OnInitialized()
-    {
-        _userId = RouterState.GetParam("id");
-    }
-}</code></pre>
-        </div>
-    </div>
+	    protected override void OnInitialized()
+	    {
+	        _userId = RouterState.GetParam("id");
+	    }
+	}</code></pre>
+		</div>
+	</div>
 }
 else
 {
-    <div class="text-center py-12">
-        <p class="text-gray-600 dark:text-gray-400">User not found</p>
-    </div>
+	<div class="text-center py-12">
+		<p class="text-gray-600 dark:text-gray-400">User not found</p>
+	</div>
 }

@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Components;
+using Blazouter.Extensions;
 
 namespace Blazouter.Web.Client.Sample.Components.Pages.Users
 {
-    public partial class UserList : ComponentBase
+    public partial class UserList
     {
         private List<User> _users =
     [
@@ -19,32 +19,26 @@ namespace Blazouter.Web.Client.Sample.Components.Pages.Users
 
         protected override void OnInitialized()
         {
-            // Get query parameters
+            // NEW: Using typed query parameter extensions for better type safety
             string? sort = RouterState.GetQuery("sort");
             string? order = RouterState.GetQuery("order");
             string? filter = RouterState.GetQuery("filter");
-            string? page = RouterState.GetQuery("page");
+            int page = RouterState.GetQueryInt("page", 1); // Default to page 1 if not specified
+            bool showInactive = RouterState.GetQueryBool("showInactive", false); // NEW: Boolean parameter
 
-            // Build query info message
+            // Build query info message - show ALL query parameters for demonstration
             List<string> queryParts = [];
-            if (!string.IsNullOrEmpty(sort))
-            {
-                queryParts.Add($"Sort: {sort}");
-            }
 
-            if (!string.IsNullOrEmpty(order))
-            {
-                queryParts.Add($"Order: {order}");
-            }
+            // Get all query parameters
+            Dictionary<string, string> allParams = RouterState.GetAllQueryParams();
 
-            if (!string.IsNullOrEmpty(filter))
+            if (allParams.Count > 0)
             {
-                queryParts.Add($"Filter: {filter}");
-            }
-
-            if (!string.IsNullOrEmpty(page))
-            {
-                queryParts.Add($"Page: {page}");
+                // Display all query parameters
+                foreach (KeyValuePair<string, string> kvp in allParams.OrderBy(x => x.Key))
+                {
+                    queryParts.Add($"{kvp.Key}: {kvp.Value}");
+                }
             }
 
             if (queryParts.Count > 0)
@@ -71,8 +65,8 @@ namespace Blazouter.Web.Client.Sample.Components.Pages.Users
                 };
             }
 
-            // Apply filter (show only active users, which in this demo we'll simulate as odd IDs)
-            if (filter?.ToLower() == "active")
+            // Apply filter (show only active users, unless showInactive is true)
+            if (filter?.ToLower() == "active" && !showInactive)
             {
                 _displayedUsers = _displayedUsers.Where(u => u.Id % 2 != 0).ToList();
             }
@@ -86,6 +80,11 @@ namespace Blazouter.Web.Client.Sample.Components.Pages.Users
             public string Role { get; set; } = "";
             public string Initials { get; set; } = "";
             public DateTime JoinDate { get; set; }
+        }
+
+        private void ClearFilters()
+        {
+            NavService.NavigateToWithClearedQuery(RouterState);
         }
     }
 }

@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.11] - 2025-11-24
+
+### Added
+- **Query String Helpers and Utilities**: Comprehensive type-safe query string manipulation
+  - `QueryStringBuilder` class with fluent API for building query strings
+  - 15 type-safe `Add()` method overloads supporting string, int, long, decimal, double, bool, DateTime, Guid, enum, and nullable variants
+  - 15 type-safe `Set()` method overloads for replacing values (prevents duplicates)
+  - `RouterStateExtensions` with typed query parameter parsing methods: `GetQueryInt()`, `GetQueryBool()`, `GetQueryDateTime()`, etc.
+  - `GetAllQueryParams()` method to retrieve all query parameters as a dictionary
+  - `RouterNavigationExtensions` for enhanced navigation with query strings
+  - `NavigateToWithQuery()` for fluent query string building during navigation
+  - `NavigateToWithUpdatedQuery()` for updating specific parameters while preserving others
+  - `NavigateToWithRemovedQuery()` and `NavigateToWithClearedQuery()` for parameter removal
+  - `NavigateToWithSingleQuery()` convenience methods for single parameter navigation
+  - Automatic URL encoding via `Uri.EscapeDataString`
+  - Safe parsing with `TryParse` and default value support
+  - Comprehensive XML documentation with usage examples
+
+### Changed
+- Updated README.md with Query String Utilities documentation and usage examples
+- Enhanced UserList sample component to display all query parameters using `GetAllQueryParams()`
+- Updated project structure documentation to reflect new Utilities directory
+
 ## [1.0.10] - 2025-11-19
 
 ### Added
@@ -151,6 +174,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FEATURES.md detailing all capabilities
 - Sample application demonstrating key features
 
+[1.0.11]: https://github.com/Taiizor/Blazouter/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/Taiizor/Blazouter/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/Taiizor/Blazouter/compare/v1.0.5...v1.0.9
 [1.0.6-1.0.8]: https://github.com/Taiizor/Blazouter/compare/v1.0.5...v1.0.9

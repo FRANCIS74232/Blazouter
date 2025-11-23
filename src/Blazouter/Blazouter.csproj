@@ -32,7 +32,7 @@
     <PropertyGroup>
         <IsPackable>true</IsPackable>
         <ApplicationIcon>Resources\Blazouter.ico</ApplicationIcon>
-        <Version>1.0.10</Version>
+        <Version>1.0.11</Version>
         <AssemblyVersion>$(Version)</AssemblyVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>Blazouter - React Router-like Routing for Blazor</Title>

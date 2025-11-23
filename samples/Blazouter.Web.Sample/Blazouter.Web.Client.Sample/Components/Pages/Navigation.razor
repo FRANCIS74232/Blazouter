@@ -1,3 +1,4 @@
+@inject RouterStateService RouterState
 @inject RouterNavigationService NavService
 
 <div class="px-4 py-8">
@@ -61,11 +62,11 @@
 			</div>
 		</div>
 
-		<!-- Navigation with Query Strings -->
+		<!-- Navigation with Query Strings (OLD WAY) -->
 		<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 mb-6 border border-gray-200 dark:border-gray-700">
-			<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Navigation with Query Strings</h2>
+			<h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Navigation with Query Strings (Traditional)</h2>
 			<p class="text-gray-600 dark:text-gray-400 mb-4">
-				Add query parameters to your navigation
+				Traditional way: manually building query strings
 			</p>
 			<div class="flex flex-wrap gap-3 mb-4">
 				<button @onclick='@(() => NavService.NavigateTo("/users?sort=name&order=asc"))'
@@ -82,7 +83,89 @@
 				</button>
 			</div>
 			<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
-				<pre class="text-sm"><code class="text-gray-300">NavService.NavigateTo("/users?sort=name&order=asc");</code></pre>
+				<pre class="text-sm"><code class="text-gray-300">// Manual string concatenation (error-prone)
+NavService.NavigateTo("/users?sort=name&order=asc");</code></pre>
+			</div>
+		</div>
+
+		<!-- Navigation with QueryStringBuilder (NEW) -->
+		<div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 rounded-xl shadow-lg p-6 mb-6 border-2 border-emerald-300 dark:border-emerald-700">
+			<div class="flex items-center mb-4">
+				<span class="text-3xl mr-3">✨</span>
+				<h2 class="text-2xl font-semibold text-gray-900 dark:text-white">NEW: QueryStringBuilder (Fluent API)</h2>
+			</div>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Type-safe query string building with the new QueryStringBuilder utility! Supports multiple types and automatic URL encoding.
+			</p>
+			<div class="flex flex-wrap gap-3 mb-4">
+				<button @onclick="@NavigateWithBuilder"
+						class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+					🚀 Sort + Filter + Page
+				</button>
+				<button @onclick="@NavigateWithTypedParams"
+						class="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors">
+					🎯 Typed Parameters
+				</button>
+				<button @onclick="@NavigateWithSingleParam"
+						class="px-4 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors">
+					⚡ Single Parameter
+				</button>
+			</div>
+			<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+				<pre class="text-sm"><code class="text-gray-300">// NEW: Fluent, type-safe query string building
+NavService.NavigateToWithQuery("/users", q => q
+    .Add("sort", "name")
+    .Add("page", 2)
+    .Add("active", true));
+
+// Single parameter shortcut
+NavService.NavigateToWithSingleQuery("/users", "sort", "name");
+
+// Update specific params while keeping others
+NavService.NavigateToWithUpdatedQuery(RouterState, null, q => q
+    .Add("page", currentPage + 1));</code></pre>
+			</div>
+		</div>
+
+		<!-- Advanced Query String Operations (NEW) -->
+		<div class="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl shadow-lg p-6 mb-6 border-2 border-violet-300 dark:border-violet-700">
+			<div class="flex items-center mb-4">
+				<span class="text-3xl mr-3">🔧</span>
+				<h2 class="text-2xl font-semibold text-gray-900 dark:text-white">NEW: Advanced Query Operations</h2>
+			</div>
+			<p class="text-gray-600 dark:text-gray-400 mb-4">
+				Update, remove, or clear query parameters while preserving navigation state
+			</p>
+			<div class="flex flex-wrap gap-3 mb-4">
+				<button @onclick="@UpdateCurrentQuery"
+						class="px-4 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition-colors">
+					📝 Update Query
+				</button>
+				<button @onclick="@RemoveQueryParam"
+						class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+					🗑️ Remove Parameter
+				</button>
+				<button @onclick="@ClearAllQuery"
+						class="px-4 py-2 bg-fuchsia-600 text-white rounded-lg hover:bg-fuchsia-700 transition-colors">
+					🧹 Clear All
+				</button>
+			</div>
+			<div class="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto">
+				<pre class="text-sm"><code class="text-gray-300">// Update specific parameters, keep others (use Set to replace values)
+NavService.NavigateToWithUpdatedQuery(RouterState, null, q => q
+    .Set("updated", DateTime.Now)
+    .Set("version", 2));
+
+// Or use Remove + Add for complex scenarios
+NavService.NavigateToWithUpdatedQuery(RouterState, null, q => q
+    .Remove("sort")
+    .Add("filter", "active"));
+
+// Remove specific parameters
+NavService.NavigateToWithRemovedQuery(RouterState, "filter", "sort");
+
+// Clear all query parameters
+NavService.NavigateToWithClearedQuery(RouterState);</code></pre>
 			</div>
 		</div>
 

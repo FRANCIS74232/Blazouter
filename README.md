@@ -45,6 +45,7 @@ Blazouter addresses the limitations of traditional Blazor routing:
 - **📐 Layout System**: Flexible layout management with default and per-route layouts
 - **🔗 Programmatic Navigation**: Navigate imperatively with enhanced navigation service
 - **⚠️ Error Handling**: Comprehensive error handling with custom error handlers and retry mechanisms
+- **🔧 Query String Utilities**: Type-safe query string builder and typed parameter parsing with fluent API
 - **🎨 Route Transitions**: Beautiful animations when navigating between routes with 14 built-in transition types
 
 ## 📦 Available Packages
@@ -544,6 +545,65 @@ new RouteConfig
 }
 ```
 
+### Query String Utilities
+
+Blazouter provides comprehensive query string helpers for type-safe parameter handling:
+
+**Type-safe query parameter parsing:**
+
+```razor
+@using Blazouter.Extensions
+@inject RouterStateService RouterState
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Typed parsing with defaults
+        int page = RouterState.GetQueryInt("page", 1);
+        bool active = RouterState.GetQueryBool("active", false);
+        DateTime? date = RouterState.GetQueryDateTimeOrNull("date");
+        
+        // Get all query parameters
+        var allParams = RouterState.GetAllQueryParams();
+    }
+}
+```
+
+**Fluent query string building:**
+
+```csharp
+@using Blazouter.Utilities
+@inject RouterNavigationService NavService
+
+@code {
+    private void NavigateWithQuery()
+    {
+        // Build query strings with type safety
+        NavService.NavigateToWithQuery("/search", q => q
+            .Add("term", "blazor")
+            .Add("active", true)
+            .Add("page", 2));
+    }
+}
+```
+
+**Update query parameters:**
+
+```csharp
+// Replace specific parameters while keeping others
+NavService.NavigateToWithUpdatedQuery(RouterState, null, q => q
+    .Set("page", currentPage + 1)
+    .Set("sort", "name"));
+
+// Remove parameters
+NavService.NavigateToWithRemovedQuery(RouterState, "filter", "sort");
+
+// Clear all parameters
+NavService.NavigateToWithClearedQuery(RouterState);
+```
+
+The `QueryStringBuilder` supports 15 type overloads including: string, int, long, decimal, double, bool, DateTime, Guid, enum, and their nullable variants.
+
 ## 🎨 Route Transitions
 
 Blazouter includes 14 built-in transitions for beautiful page navigation:
@@ -621,10 +681,10 @@ builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
 
 ### Error Types
 
-- `ComponentLoadFailed` - Component failed to load
+- `InvalidRoute` - Invalid route configuration
 - `GuardRejected` - Route guard denied access
 - `NavigationFailed` - Navigation operation failed
-- `InvalidRoute` - Invalid route configuration
+- `ComponentLoadFailed` - Component failed to load
 
 ## 🏗️ Project Structure
 
@@ -635,11 +695,12 @@ Blazouter/
 │   │   ├── Attributes/            # Route attribute definitions
 │   │   ├── Components/            # Router components (Router, RouterLink, RouterOutlet)
 │   │   │   └── Layouts/           # Built-in layout components
-│   │   ├── Extensions/            # Service collection extensions
+│   │   ├── Extensions/            # Service collection and router extensions (typed query parameters, navigation)
 │   │   ├── Guards/                # Route guard interfaces
 │   │   ├── Models/                # Route models (RouteConfig, RouteMatch, RouteTransition)
 │   │   ├── Resources/             # Embedded resources
 │   │   ├── Services/              # Routing services (RouterStateService, RouteMatcherService, etc.)
+│   │   ├── Utilities/             # Query string builder and helper utilities
 │   │   └── wwwroot/               # CSS and assets (blazouter.css, blazouter.min.css)
 │   ├── Blazouter.Server/          # Server-specific extensions
 │   │   ├── Extensions/            # Server integration (AddBlazouterSupport)
@@ -733,7 +794,7 @@ Inspired by React Router and built to bring similar capabilities to the Blazor e
 - [ ] Route middleware support
 - [ ] Performance optimizations
 - [ ] Advanced caching strategies
-- [ ] Query string helpers and utilities
+- [x] Query string helpers and utilities
 - [ ] Better TypeScript integration for JS interop
 
 ## ⭐ Show Your Support

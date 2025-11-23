@@ -108,6 +108,31 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Custom error handler registration via `AddBlazouterErrorHandler<T>()`
 - Error types: `ComponentLoadFailed`, `GuardRejected`, `NavigationFailed`, `InvalidRoute`
 
+### ✅ 11. Query String Helpers and Utilities
+- Tested and verified working
+- Type-safe query string manipulation with fluent API
+- `QueryStringBuilder` class for building query strings
+- Automatic URL encoding via `Uri.EscapeDataString`
+- Safe parsing with `TryParse` and default value support
+- Comprehensive XML documentation with code examples
+- `RouterStateExtensions` for typed query parameter parsing
+  - `HasQuery()` to check parameter existence
+  - `GetAllQueryParams()` to retrieve all parameters as dictionary
+  - Nullable variants: `GetQueryIntOrNull()`, `GetQueryBoolOrNull()`, etc.
+  - `GetQueryBool()` supporting "true", "false", "1", "0", "yes", "no", "on", "off"
+  - `GetQueryDateTime()`, `GetQueryGuid()`, `GetQueryEnum<T>()` for complex types
+  - `GetQueryInt()`, `GetQueryLong()`, `GetQueryDecimal()`, `GetQueryDouble()` with default values
+- 15 `Set()` method overloads for replacing values without duplicates
+- `RouterNavigationExtensions` for enhanced navigation with query strings
+  - `NavigateToWithQuery()` - Fluent query builder integration
+  - `NavigateToWithClearedQuery()` - Clear all query parameters
+  - `NavigateToWithRemovedQuery()` - Remove specific parameters
+  - `NavigateToWithReplacedQuery()` - Replace all query parameters
+  - `NavigateToWithSingleQuery()` - Convenience for single parameter
+  - `NavigateToWithUpdatedQuery()` - Update specific parameters, preserve others
+- Sample application demonstrates all features in Navigation.razor and UserList.razor
+- 15 `Add()` method overloads for all common types (string, int, long, decimal, double, bool, DateTime, Guid, enum, and nullable variants)
+
 ## Components
 
 ### Router
@@ -175,6 +200,46 @@ Nested route renderer that:
 - Error handling interface for custom implementations
 - Registered as scoped service via AddBlazouterErrorHandler<T>()
 
+## Utilities
+
+### QueryStringBuilder
+- Fluent API for building query strings
+- Support for nullable variants of all types
+- `AddIf()` for conditional parameter addition
+- `AddRange()` for multiple values per parameter
+- `Build()` returns query string without `?` prefix
+- `Remove()` and `Clear()` for parameter removal
+- 15 type-safe `Set()` methods for replacing values
+- Automatic URL encoding with Uri.EscapeDataString
+- 15 type-safe `Add()` methods for appending values
+- `BuildWithPrefix()` returns query string with `?` prefix
+- `ToDictionary()` converts to Dictionary<string, string>
+- Support for string, int, long, decimal, double, bool, DateTime, Guid, enum types
+
+## Extension Methods
+
+### RouterStateExtensions
+- `HasQuery()` - Check if parameter exists
+- `GetQueryBoolOrNull()` - Parse nullable boolean
+- All methods use InvariantCulture for consistent parsing
+- `GetAllQueryParams()` - Get all parameters as dictionary
+- `GetQueryArray()` - Get multiple values for same parameter
+- `GetQueryGuid()`, `GetQueryGuidOrNull()` - Parse Guid parameters
+- `GetQueryEnum<T>()`, `GetQueryEnumOrNull<T>()` - Parse enum parameters
+- `GetQueryDateTime()`, `GetQueryDateTimeOrNull()` - Parse DateTime in ISO 8601 format
+- `GetQueryBool()` - Parse boolean with support for "true", "false", "1", "0", "yes", "no", "on", "off"
+- `GetQueryInt()`, `GetQueryLong()`, `GetQueryDecimal()`, `GetQueryDouble()` - Parse numeric parameters with defaults
+- `GetQueryIntOrNull()`, `GetQueryLongOrNull()`, `GetQueryDecimalOrNull()`, `GetQueryDoubleOrNull()` - Parse nullable numeric parameters
+
+### RouterNavigationExtensions
+- `NavigateToWithQuery()` - Navigate with fluent query builder
+- `NavigateToWithClearedQuery()` - Clear all query parameters
+- `NavigateToWithReplacedQuery()` - Replace all query parameters
+- `NavigateToWithRemovedQuery()` - Remove specific parameters by key
+- `NavigateToWithSingleQuery()` - Convenience method for single string parameter
+- `NavigateToWithSingleQuery<T>()` - Convenience method for single typed parameter
+- `NavigateToWithUpdatedQuery()` - Update specific parameters while preserving others
+
 ## Configuration
 
 ### RouteConfig Properties
@@ -200,12 +265,15 @@ Nested route renderer that:
 - Layout system support (DefaultLayout, per-route Layout)
 - CSS animations included (blazouter.css, blazouter.min.css)
 - All routing components (Router, RouterLink, RouterOutlet)
+- Fluent query string building with automatic URL encoding
 - Multi-framework support (net6.0, net7.0, net8.0, net9.0, net10.0)
+- Type-safe query parameter parsing with 15+ extension methods
 - Navigation services (RouterNavigationService, RouterStateService)
 - Route guards interface (IRouteGuard, AuthGuard base implementation)
 - Route configuration and matching (RouteConfig, RouteMatcherService)
 - Attribute-based routing (RouteAttributeDiscoveryService, 8 route attributes)
 - Error handling (IRouterErrorHandler, DefaultRouterErrorHandler, RouterErrorContext)
+- Query string utilities (QueryStringBuilder, RouterStateExtensions, RouterNavigationExtensions)
 
 ### Blazouter.Server
 - Server-side route optimization
@@ -234,6 +302,11 @@ The sample application demonstrates:
 3. About page with library information
 4. Lazy loaded page with component loader
 5. Users page with nested routing (list and detail views)
+6. Navigation page with comprehensive query string utilities showcase
+   - Type-safe query parameter parsing examples
+   - Traditional vs fluent query string building comparison
+   - Query parameter manipulation (update, remove, clear)
+   - Interactive buttons demonstrating all query string features
 
 All features are interactive and can be tested by navigating through the application.
 
@@ -251,3 +324,4 @@ All features are interactive and can be tested by navigating through the applica
 | Attribute Routes | ❌ @page only | ✅ 8 attribute types with full config |
 | Parameter Access | ✅ Basic | ✅ Enhanced with RouterStateService |
 | Programmatic Nav | ✅ Basic | ✅ Enhanced with RouterNavigationService |
+| Query String Helpers | ❌ Manual parsing | ✅ Type-safe fluent API with 15+ methods |

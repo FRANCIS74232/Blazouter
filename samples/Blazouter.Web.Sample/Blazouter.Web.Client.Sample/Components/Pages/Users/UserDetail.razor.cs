@@ -1,8 +1,6 @@
-using Microsoft.AspNetCore.Components;
-
 namespace Blazouter.Web.Client.Sample.Components.Pages.Users
 {
-    public partial class UserDetail : ComponentBase
+    public partial class UserDetail
     {
         private string? _userId;
         private UserModel? _user;

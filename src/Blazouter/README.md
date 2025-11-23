@@ -15,6 +15,7 @@ A powerful React Router-like routing library for Blazor applications. This is th
 - ✅ **Built-in route guards** - Protect routes with authentication/authorization
 - ✅ **Dynamic route parameters** - Easy access to route and query parameters
 - ✅ **Flexible layout system** - Default and per-route layouts with @Body support
+- ✅ **Query string utilities** - Type-safe query string builder and typed parameter parsing
 
 ## Installation
 
@@ -252,6 +253,43 @@ protected override void OnInitialized()
     var userId = RouterState.GetParam("id");
 }
 ```
+
+## Query String Utilities
+
+Type-safe query string manipulation with fluent API:
+
+```csharp
+@using Blazouter.Utilities
+@using Blazouter.Extensions
+@inject RouterStateService RouterState
+@inject RouterNavigationService NavService
+
+// Typed query parameter parsing
+protected override void OnInitialized()
+{
+    int page = RouterState.GetQueryInt("page", 1);
+    bool active = RouterState.GetQueryBool("active", false);
+    DateTime? date = RouterState.GetQueryDateTimeOrNull("date");
+}
+
+// Fluent query string building
+private void SearchWithFilters()
+{
+    NavService.NavigateToWithQuery("/search", q => q
+        .Add("term", "blazor")
+        .Add("active", true)
+        .Add("page", 2));
+}
+
+// Update query parameters
+private void NextPage()
+{
+    NavService.NavigateToWithUpdatedQuery(RouterState, null, q => q
+        .Set("page", currentPage + 1));
+}
+```
+
+**Supported types**: string, int, long, decimal, double, bool, DateTime, Guid, enum, and nullable variants (15 type-safe methods each for `Add()` and `Set()`).
 
 ## Transitions
 

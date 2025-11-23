@@ -1,6 +1,6 @@
 using Blazouter.Extensions;
 
-namespace Blazouter.Web.Client.Sample.Components.Pages
+namespace Blazouter.Hybrid.Sample.Components.Pages
 {
     public partial class Navigation
     {
