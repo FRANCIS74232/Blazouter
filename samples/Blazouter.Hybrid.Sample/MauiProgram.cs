@@ -1,6 +1,4 @@
-﻿using Blazouter.Extensions;
-using Blazouter.Hybrid.Extensions;
-using Blazouter.Hybrid.Sample.Services;
+﻿using Blazouter.Hybrid.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Blazouter.Hybrid.Sample
@@ -22,13 +20,7 @@ namespace Blazouter.Hybrid.Sample
 
             builder.Services.AddMauiBlazorWebView();
 
-            // Register sample services
-            builder.Services.AddSingleton<AuthService>();
-
             builder.Services.AddBlazorWebViewDeveloperTools();
-
-            // Register custom error handler for routing errors
-            builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
 
             return builder.Build();
         }

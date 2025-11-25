@@ -4,7 +4,7 @@ namespace Blazouter.WebAssembly.Sample.Services
     /// Simple authentication service for demonstration purposes.
     /// In a real application, this would connect to an actual authentication provider.
     /// </summary>
-    public class AuthService
+    public class AuthenticationService
     {
         /// <summary>
         /// Gets whether the user is currently authenticated.

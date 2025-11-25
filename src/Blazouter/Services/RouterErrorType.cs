@@ -206,6 +206,34 @@ namespace Blazouter.Services
         /// will include the specific component type and stack trace for debugging.
         /// </para>
         /// </remarks>
-        ComponentRendering
+        ComponentRendering,
+
+        /// <summary>
+        /// An error occurred while executing route middleware.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// Middleware execution errors occur when a route middleware's InvokeAsync method throws an unhandled
+        /// exception. Middleware are meant to execute logic and call next() to continue the pipeline, so
+        /// exceptions indicate unexpected failures in the middleware logic itself.
+        /// </para>
+        /// <para>
+        /// Common causes of middleware execution errors:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Exceptions in logging or analytics service calls</description></item>
+        /// <item><description>Network failures when preloading data</description></item>
+        /// <item><description>Null reference errors in middleware logic</description></item>
+        /// <item><description>Timeout exceptions in async middleware operations</description></item>
+        /// <item><description>Dependency injection failures for middleware dependencies</description></item>
+        /// </list>
+        /// <para>
+        /// <strong>Best Practice:</strong> Middleware should handle their own exceptions gracefully rather
+        /// than throwing. When MiddlewareExecution errors occur, review the middleware implementation to add
+        /// proper error handling. Middleware executes before guards, so a middleware error will prevent
+        /// guards from running. Log the specific middleware type and route for easier debugging.
+        /// </para>
+        /// </remarks>
+        MiddlewareExecution
     }
 }

@@ -17,18 +17,18 @@
 			<h4 class="text-lg font-semibold text-green-900 dark:text-green-100 mb-2">✅ Access Granted!</h4>
 			<p class="text-green-800 dark:text-green-200">
 				You're seeing this page because the AuthGuard allowed access.
-				<span class="block mt-2 text-sm">Current auth status: <strong>@(AuthService.IsAuthenticated ? "Authenticated" : "Not Authenticated")</strong></span>
+				<span class="block mt-2 text-sm">Current auth status: <strong>@(AuthenticationService.IsAuthenticated ? "Authenticated" : "Not Authenticated")</strong></span>
 			</p>
 		</div>
 
 		<div class="space-y-3">
 			<h4 class="text-lg font-semibold text-gray-900 dark:text-white">Authentication Controls:</h4>
 			<div class="flex gap-3">
-				<button @onclick="AuthService.Login"
+				<button @onclick="AuthenticationService.Login"
 						class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
 					Login
 				</button>
-				<button @onclick="AuthService.Logout"
+				<button @onclick="AuthenticationService.Logout"
 						class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
 					Logout
 				</button>

@@ -1,0 +1,72 @@
+<div class="max-w-4xl mx-auto px-4 py-8">
+	<h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Route Middleware Example</h2>
+
+	<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+		<h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Component Configuration</h3>
+		<p class="text-gray-600 dark:text-gray-400 mb-4">This page uses multiple middleware for logging, timing, and analytics:</p>
+
+		<div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 font-mono text-sm mb-4">
+			<div class="text-green-600 dark:text-green-400">// MiddlewareExample.razor.cs</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">Route</span>(<span class="text-orange-600 dark:text-orange-400">"/attribute-examples/middleware"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTitle</span>(<span class="text-orange-600 dark:text-orange-400">"Middleware Example"</span>)]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteMiddleware</span>(<span class="text-purple-600 dark:text-purple-400">typeof</span>(LoggingMiddleware))]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteMiddleware</span>(<span class="text-purple-600 dark:text-purple-400">typeof</span>(TimingMiddleware))]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteMiddleware</span>(<span class="text-purple-600 dark:text-purple-400">typeof</span>(AnalyticsMiddleware))]</div>
+			<div class="text-gray-800 dark:text-gray-200">[<span class="text-blue-600 dark:text-blue-400">RouteTransition</span>(RouteTransition.<span class="text-purple-600 dark:text-purple-400">Pop</span>)]</div>
+		</div>
+
+		<div class="bg-purple-50 dark:bg-purple-900/20 border-2 border-purple-200 dark:border-purple-800 rounded-lg p-4 mb-4">
+			<h4 class="text-lg font-semibold text-purple-900 dark:text-purple-100 mb-2">📊 Middleware Data</h4>
+			<div class="text-purple-800 dark:text-purple-200 space-y-2">
+				@if (PageViewId != null)
+				{
+					<p><strong>Page View ID:</strong> <code class="px-2 py-1 bg-purple-100 dark:bg-purple-800 rounded text-sm">@PageViewId</code></p>
+				}
+				@if (NavigationDuration != null)
+				{
+					<p><strong>Navigation Duration:</strong> <code class="px-2 py-1 bg-purple-100 dark:bg-purple-800 rounded text-sm">@NavigationDuration.Value.TotalMilliseconds ms</code></p>
+				}
+				<p class="text-sm mt-3">Open the browser console (F12) to see middleware logs in action!</p>
+			</div>
+		</div>
+
+		<div class="space-y-3">
+			<h4 class="text-lg font-semibold text-gray-900 dark:text-white">Try Navigating:</h4>
+			<p class="text-gray-600 dark:text-gray-400 text-sm">
+				Click the buttons below and watch the console to see middleware executing before and after navigation.
+			</p>
+			<div class="flex gap-3 flex-wrap">
+				<button @onclick="@(() => NavigationService.NavigateTo("/attribute-examples/basic"))" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">
+					Basic Example
+				</button>
+				<button @onclick="@(() => NavigationService.NavigateTo("/attribute-examples/guards"))" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors">
+					Guards Example
+				</button>
+				<button @onclick="@(() => NavigationService.NavigateTo("/attribute-examples/middleware"))" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors">
+					Reload This Page
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="bg-blue-50 dark:bg-blue-900/20 border-2 border-blue-200 dark:border-blue-800 rounded-xl p-6 mb-6">
+		<h3 class="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-3">⚙️ How Middleware Works</h3>
+		<ul class="space-y-2 text-blue-800 dark:text-blue-200">
+			<li>• Middleware execute <strong>before guards</strong> in the navigation pipeline</li>
+			<li>• Multiple middleware can be applied to a single route</li>
+			<li>• Middleware execute in the order they are declared</li>
+			<li>• Middleware can pass data to components via <code class="px-2 py-1 bg-blue-100 dark:bg-blue-800 rounded">context.Data</code></li>
+			<li>• Middleware can abort navigation or redirect to another route</li>
+		</ul>
+	</div>
+
+	<div class="bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 rounded-xl p-6">
+		<h3 class="text-lg font-semibold text-green-900 dark:text-green-100 mb-3">💡 Use Cases</h3>
+		<ul class="space-y-2 text-green-800 dark:text-green-200">
+			<li><strong>LoggingMiddleware:</strong> Track navigation events and debug routing issues</li>
+			<li><strong>TimingMiddleware:</strong> Measure and optimize navigation performance</li>
+			<li><strong>AnalyticsMiddleware:</strong> Collect page view metrics and user behavior data</li>
+			<li><strong>DataPreloadMiddleware:</strong> Fetch data during navigation for instant page loads</li>
+		</ul>
+	</div>
+</div>

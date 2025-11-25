@@ -128,6 +128,48 @@ namespace Blazouter.Models
         public List<RouteConfig> Children { get; set; } = [];
 
         /// <summary>
+        /// Gets or sets the collection of route middleware types to execute during navigation to this route.
+        /// </summary>
+        /// <value>
+        /// A list of Types that implement IRouteMiddleware. Middleware are executed in the order specified. Defaults to an empty list.
+        /// </value>
+        /// <remarks>
+        /// <para>
+        /// Route middleware provides a way to execute code before and after route navigation. Unlike guards which
+        /// focus solely on access control, middleware can perform any arbitrary logic such as logging, analytics,
+        /// data preloading, caching, and more.
+        /// </para>
+        /// <para>
+        /// Middleware executes in a pipeline pattern where each middleware can:
+        /// - Execute logic before navigation (code before calling next())
+        /// - Execute logic after navigation (code after calling next())
+        /// - Short-circuit navigation by not calling next()
+        /// - Modify context data that components can access
+        /// - Abort navigation or redirect to a different path
+        /// </para>
+        /// <para>
+        /// Middleware are executed before route guards. If middleware aborts navigation, guards are not executed.
+        /// Middleware are instantiated either through dependency injection or via Activator.CreateInstance.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// new RouteConfig
+        /// {
+        ///     Path = "/admin",
+        ///     Component = typeof(AdminPage),
+        ///     Middleware = new List&lt;Type&gt; 
+        ///     { 
+        ///         typeof(LoggingMiddleware),
+        ///         typeof(TimingMiddleware),
+        ///         typeof(AnalyticsMiddleware)
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public List<Type> Middleware { get; set; } = [];
+
+        /// <summary>
         /// Gets or sets the collection of route guard types to execute before allowing navigation to this route.
         /// </summary>
         /// <value>
@@ -141,6 +183,7 @@ namespace Blazouter.Models
         /// <para>
         /// If any guard fails, the guard can optionally specify a redirect path through GetRedirectPathAsync.
         /// Guards are instantiated either through dependency injection or via Activator.CreateInstance.
+        /// Guards are executed after middleware. If middleware aborts navigation, guards are not executed.
         /// </para>
         /// </remarks>
         public List<Type> Guards { get; set; } = [];

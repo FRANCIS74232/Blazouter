@@ -6,7 +6,7 @@ namespace Blazouter.WebAssembly.Sample.Guards
     /// <summary>
     /// Sample authentication guard for demonstration
     /// </summary>
-    public class AuthGuard : IRouteGuard
+    public class AuthenticationGuard : IRouteGuard
     {
         public Task<bool> CanActivateAsync(RouteMatch match)
         {

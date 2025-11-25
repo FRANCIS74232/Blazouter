@@ -27,8 +27,9 @@ namespace Blazouter.Services
     /// <item><description>Automatic discovery eliminates manual route registration</description></item>
     /// </list>
     /// <para>
-    /// Supported attributes include: [Route], [RouteGuard], [RouteTransition], [RouteLayout], [RouteTitle],
-    /// [RouteData], [RouteRedirect], and [RouteExact]. Multiple attributes can be combined on a single component.
+    /// Supported attributes include: [Route], [RouteMiddleware], [RouteGuard], [RouteTransition], [RouteLayout], 
+    /// [RouteTitle], [RouteData], [RouteRedirect], and [RouteExact]. Multiple attributes can be combined on a 
+    /// single component.
     /// </para>
     /// <para>
     /// <strong>Important:</strong> Route discovery uses reflection to scan assemblies. This may not work correctly
@@ -180,6 +181,7 @@ namespace Blazouter.Services
         /// <list type="number">
         /// <item><description>Route path from [Route] attribute</description></item>
         /// <item><description>Transitions from [RouteTransition] attribute</description></item>
+        /// <item><description>Middleware from [RouteMiddleware] attributes (supports multiple)</description></item>
         /// <item><description>Guards from [RouteGuard] attributes (supports multiple)</description></item>
         /// <item><description>Layout from [RouteLayout] attribute</description></item>
         /// <item><description>Title from [RouteTitle] attribute</description></item>
@@ -188,8 +190,8 @@ namespace Blazouter.Services
         /// <item><description>Exact matching from [RouteExact] attribute</description></item>
         /// </list>
         /// <para>
-        /// Multiple instances of attributes that support AllowMultiple (RouteGuard, RouteData) are all collected
-        /// and included in the configuration.
+        /// Multiple instances of attributes that support AllowMultiple (RouteMiddleware, RouteGuard, RouteData) 
+        /// are all collected and included in the configuration.
         /// </para>
         /// </remarks>
         private static RouteConfig CreateRouteConfig(Type componentType, RouteAttribute routeAttr)
@@ -205,6 +207,13 @@ namespace Blazouter.Services
             if (transitionAttr != null)
             {
                 config.Transition = transitionAttr.Transition;
+            }
+
+            // Route Middleware - supports multiple middleware attributes
+            RouteMiddlewareAttribute[] middlewareAttrs = [.. componentType.GetCustomAttributes<RouteMiddlewareAttribute>(inherit: true)];
+            if (middlewareAttrs.Length > 0)
+            {
+                config.Middleware = [.. middlewareAttrs.Select(m => m.MiddlewareType)];
             }
 
             // Route Guards - supports multiple guard attributes

@@ -1,6 +1,7 @@
 using Blazouter.Attributes;
 using Blazouter.Models;
 using Blazouter.Services;
+using Blazouter.WebAssembly.Sample.Guards;
 using Microsoft.AspNetCore.Components;
 using RouteAttribute = Blazouter.Attributes.RouteAttribute;
 
@@ -13,8 +14,8 @@ namespace Blazouter.WebAssembly.Sample.Pages
     [Route("/attribute-examples")]
     [RouteData("Section", "Admin")]
     [RouteTitle("Attribute Example")]
-    [RouteGuard(typeof(Guards.AuthGuard))]
     [RouteTransition(RouteTransition.Fade)]
+    [RouteGuard(typeof(AuthenticationGuard))]
     public partial class AttributeRouting
     {
         [Inject] private RouterNavigationService NavigationService { get; set; } = default!;

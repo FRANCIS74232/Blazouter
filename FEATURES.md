@@ -22,27 +22,41 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Unlimited nesting depth for complex route hierarchies
 - Parent routes with child routes using `RouterOutlet` component
 
-### ✅ 2. Route Guards (Protected Routes)
+### ✅ 2. Route Middleware
+- Tested and verified working
+- Can abort navigation or redirect to different paths
+- `IRouteMiddleware` interface for custom middleware
+- `InvokeAsync` method with context and next delegate
+- Pipeline execution pattern for before/after navigation logic
+- Middleware execute before guards in the navigation pipeline
+- Support for multiple middleware per route (executed in order)
+- Data sharing between middleware and components via context.Data
+- Middleware can be registered via dependency injection or created via Activator
+- Common use cases: logging, analytics, performance monitoring, data preloading, feature flags
+- Example middleware: LoggingMiddleware, TimingMiddleware, AnalyticsMiddleware, DataPreloadMiddleware
+
+### ✅ 3. Route Guards (Protected Routes)
 - Tested and verified working
 - `CanActivateAsync` method to control route access
-- Example: `SampleAuthGuard` in the sample application
 - `GetRedirectPathAsync` for redirect on denied access
+- Example: `SampleAuthGuard` in the sample application
 - Support for multiple guards per route (executed in order)
+- Guards execute after middleware in the navigation pipeline
 - `IRouteGuard` interface for custom authentication/authorization logic
 - Guards can be registered via dependency injection or created via Activator
 
-### ✅ 3. Lazy Loading
+### ✅ 4. Lazy Loading
 - Reduces initial bundle size
 - Tested and verified working
 - Async component loading with `Task<Type>`
 - Example: Lazy page with simulated 1-second delay
+- Component caching after first load for performance
 - `ComponentLoader` function property on `RouteConfig`
 - Loading state support with `<Loading>` parameter in Router
-- Component caching after first load for performance
 
-### ✅ 4. Route Transitions/Animations
-- Tested and verified working
+### ✅ 5. Route Transitions/Animations
 - 14 built-in transition types
+- Tested and verified working
 - Custom animations can be added via CSS
 - Configurable per-route via `Transition` property
 - Automatic animation application on route change
@@ -50,16 +64,16 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Respects prefers-reduced-motion accessibility preference
 - Built-in transitions: `None`, `Pop`, `Blur`, `Fade`, `Flip`, `Lift`, `Scale`, `Slide`, `Swipe`, `Reveal`, `Rotate`, `Curtain`, `SlideUp`, `SlideFade`, `Spotlight`
 
-### ✅ 5. Programmatic Navigation
+### ✅ 6. Programmatic Navigation
 - Query parameter support
 - Browser history integration
-- Tested and verified working
 - `NavigateTo(path)` method
+- Tested and verified working
 - Support for relative and absolute navigation
 - Integration with Blazor's `NavigationManager`
 - `RouterNavigationService` for imperative navigation
 
-### ✅ 6. Dynamic Route Parameters
+### ✅ 7. Dynamic Route Parameters
 - Tested and verified working
 - Parameter change notifications
 - Type-safe parameter extraction
@@ -68,7 +82,7 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Path parameters using `:paramName` syntax
 - Easy access via `RouterStateService.GetParam(key)`
 
-### ✅ 7. Active Link State
+### ✅ 8. Active Link State
 - `Exact` matching option
 - Tested and verified working
 - Visual feedback for current route
@@ -77,7 +91,7 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - `ActiveClass` property for custom styling
 - `RouterLink` component with automatic active class
 
-### ✅ 8. Layout System
+### ✅ 9. Layout System
 - Tested and verified working
 - Layout state preservation during navigation
 - Seamless layout switching during navigation
@@ -87,7 +101,7 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Layout priority: Route.Layout > Router.DefaultLayout > No Layout
 - Automatic layout wrapping using @Body from LayoutComponentBase
 
-### ✅ 9. Attribute-Based Routing
+### ✅ 10. Attribute-Based Routing
 - Tested and verified working
 - Mix programmatic and attribute-based routes
 - Declarative route configuration using attributes
@@ -95,9 +109,9 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Automatic route discovery via assembly scanning
 - `AddAttributeRoutes()` extension for easy integration
 - `FromAttributes()` for pure attribute-based configuration
-- 8 attribute types: `[Route]`, `[RouteGuard]`, `[RouteTransition]`, `[RouteLayout]`, `[RouteTitle]`, `[RouteData]`, `[RouteRedirect]`, `[RouteExact]`
+- 9 attribute types: `[Route]`, `[RouteMiddleware]`, `[RouteGuard]`, `[RouteTransition]`, `[RouteLayout]`, `[RouteTitle]`, `[RouteData]`, `[RouteRedirect]`, `[RouteExact]`
 
-### ✅ 10. Error Handling
+### ✅ 11. Error Handling
 - Error event notifications
 - Comprehensive error handling system
 - Retry mechanism for failed operations
@@ -106,13 +120,13 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - `ErrorContent` parameter in Router for custom error UI
 - `IRouterErrorHandler` interface for custom error handlers
 - Custom error handler registration via `AddBlazouterErrorHandler<T>()`
-- Error types: `ComponentLoadFailed`, `GuardRejected`, `NavigationFailed`, `InvalidRoute`
+- Error types: `ComponentLoadFailed`, `GuardRejected`, `NavigationFailed`, `InvalidRoute`, `MiddlewareExecution`
 
-### ✅ 11. Query String Helpers and Utilities
+### ✅ 12. Query String Helpers and Utilities
 - Tested and verified working
 - Type-safe query string manipulation with fluent API
-- `QueryStringBuilder` class for building query strings
 - Automatic URL encoding via `Uri.EscapeDataString`
+- `QueryStringBuilder` class for building query strings
 - Safe parsing with `TryParse` and default value support
 - Comprehensive XML documentation with code examples
 - `RouterStateExtensions` for typed query parameter parsing
@@ -232,8 +246,8 @@ Nested route renderer that:
 - `GetQueryIntOrNull()`, `GetQueryLongOrNull()`, `GetQueryDecimalOrNull()`, `GetQueryDoubleOrNull()` - Parse nullable numeric parameters
 
 ### RouterNavigationExtensions
-- `NavigateToWithQuery()` - Navigate with fluent query builder
 - `NavigateToWithClearedQuery()` - Clear all query parameters
+- `NavigateToWithQuery()` - Navigate with fluent query builder
 - `NavigateToWithReplacedQuery()` - Replace all query parameters
 - `NavigateToWithRemovedQuery()` - Remove specific parameters by key
 - `NavigateToWithSingleQuery()` - Convenience method for single string parameter
@@ -252,9 +266,10 @@ Nested route renderer that:
 - `Title`: Route title for metadata - Used for page title, breadcrumbs, or navigation labels
 - `Children`: Nested route configurations - List of child RouteConfig for hierarchical routing
 - `RedirectTo`: Redirect path - Automatically redirects to specified path when route matches
-- `Guards`: List of route guard types - Array of IRouteGuard implementations for access control
 - `Component`: Component type to render - Direct component reference for immediate loading
+- `Guards`: List of route guard types - Array of IRouteGuard implementations for access control
 - `ComponentLoader`: Async component loader for lazy loading - Returns `Task<Type>` for on-demand loading
+- `Middleware`: List of route middleware types - Array of IRouteMiddleware implementations for cross-cutting concerns
 
 ## Package-Specific Features
 
@@ -263,9 +278,9 @@ Nested route renderer that:
 - 14 transition types with RouteTransition enum
 - Comprehensive XML documentation for IntelliSense
 - Layout system support (DefaultLayout, per-route Layout)
+- Fluent query string building with automatic URL encoding
 - CSS animations included (blazouter.css, blazouter.min.css)
 - All routing components (Router, RouterLink, RouterOutlet)
-- Fluent query string building with automatic URL encoding
 - Multi-framework support (net6.0, net7.0, net8.0, net9.0, net10.0)
 - Type-safe query parameter parsing with 15+ extension methods
 - Navigation services (RouterNavigationService, RouterStateService)

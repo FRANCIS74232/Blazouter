@@ -46,6 +46,33 @@ public class AboutPage : ComponentBase
 **Parameters:**
 - `transition` (RouteTransition enum) - The animation type (Fade, Slide, Scale, etc.)
 
+### `[RouteMiddleware]` - Add Route Middleware
+
+Specifies middleware to execute during navigation. Multiple middleware can be applied.
+
+```csharp
+[Route("/admin")]
+[RouteMiddleware(typeof(LoggingMiddleware))]
+[RouteMiddleware(typeof(TimingMiddleware))]
+[RouteMiddleware(typeof(AnalyticsMiddleware))]
+public class AdminPage : ComponentBase
+{
+    // Component implementation
+}
+```
+
+**Parameters:**
+- `middlewareType` (Type) - The type of the middleware class (must implement `IRouteMiddleware`)
+
+**Note:** Middleware execute in the order they are declared, before guards. Middleware can execute code before and after navigation, share data with components, and abort or redirect navigation.
+
+**Common Use Cases:**
+- Logging and analytics tracking
+- Performance monitoring
+- Data preloading
+- Feature flags
+- Session management
+
 ### `[RouteGuard]` - Add Access Control
 
 Specifies route guards for authentication/authorization. Multiple guards can be applied.
@@ -63,7 +90,7 @@ public class AdminPage : ComponentBase
 **Parameters:**
 - `guardType` (Type) - The type of the guard class (must implement `IRouteGuard`)
 
-**Note:** Guards execute in the order they are declared.
+**Note:** Guards execute in the order they are declared, after middleware.
 
 ### `[RouteLayout]` - Set Layout Component
 
@@ -107,13 +134,19 @@ Adds custom key-value data to the route. Multiple data attributes can be applied
 [RouteData("Section", "Management")]
 public class AdminPage : ComponentBase
 {
-    // Component implementation
+    // Only define parameters you need - others are automatically filtered
+    [Parameter]
+    public string? Section { get; set; }
+    
+    // RequireAdmin is not defined, so it's filtered out (no error)
 }
 ```
 
 **Parameters:**
 - `key` (string) - The data key
 - `value` (object) - The data value
+
+**Note:** Route data is automatically filtered based on component parameters. You can use any `[RouteData]` attributes without needing matching parameters in the component - only data with matching `[Parameter]` properties will be passed through.
 
 ### `[RouteRedirect]` - Redirect to Another Path
 
@@ -183,6 +216,8 @@ namespace MyApp.Pages
 {
     [Route("/admin/dashboard")]
     [RouteTransition(RouteTransition.Slide)]
+    [RouteMiddleware(typeof(LoggingMiddleware))]
+    [RouteMiddleware(typeof(TimingMiddleware))]
     [RouteGuard(typeof(AuthGuard))]
     [RouteGuard(typeof(AdminGuard))]
     [RouteLayout(typeof(AdminLayout))]
@@ -282,6 +317,70 @@ public class UserDetailPage : ComponentBase
 }
 ```
 
+## Middleware with Attributes
+
+Route middleware allows you to execute code before and after navigation. Middleware can be used for logging, analytics, data preloading, and more.
+
+### Basic Middleware Example
+
+```csharp
+[Route("/profile")]
+[RouteMiddleware(typeof(LoggingMiddleware))]
+[RouteMiddleware(typeof(TimingMiddleware))]
+public class ProfilePage : ComponentBase
+{
+    // Middleware will execute in order: Logging -> Timing -> Component
+}
+```
+
+### Middleware with Data Sharing
+
+Middleware can pass data to components via the context:
+
+```csharp
+// Middleware implementation
+public class DataPreloadMiddleware : IRouteMiddleware
+{
+    public async Task InvokeAsync(RouteMiddlewareContext context, Func<Task> next)
+    {
+        // Preload data
+        var data = await LoadDataAsync();
+        context.Data["PreloadedData"] = data;
+        
+        await next();
+    }
+}
+
+// Component using the attribute
+[Route("/users/:id")]
+[RouteMiddleware(typeof(DataPreloadMiddleware))]
+public class UserDetailPage : ComponentBase
+{
+    [Parameter]
+    public object? PreloadedData { get; set; }
+    
+    // Only define parameters you need - other middleware data is automatically filtered
+}
+```
+
+**Note:** The Router automatically filters both middleware data and route data based on component parameters. Middleware can store any data in `context.Data` and you can use any `[RouteData]` attributes without causing errors - only matching `[Parameter]` properties will receive the data.
+
+### Combining Middleware and Guards
+
+Middleware execute before guards, allowing you to set up context for guards:
+
+```csharp
+[Route("/admin")]
+[RouteMiddleware(typeof(SessionMiddleware))]     // Runs first
+[RouteMiddleware(typeof(LoggingMiddleware))]     // Runs second
+[RouteGuard(typeof(AuthGuard))]                  // Runs third
+[RouteGuard(typeof(AdminRoleGuard))]             // Runs fourth
+public class AdminPage : ComponentBase
+{
+    // Execution order: SessionMiddleware -> LoggingMiddleware -> AuthGuard -> AdminRoleGuard -> Component
+}
+```
+
 ## Nested Routes
 
 For nested routes, you still need to use programmatic configuration since parent-child relationships require more complex setup:
@@ -330,6 +429,7 @@ Keep related attributes together for readability:
 [Route("/admin")]
 [RouteLayout(typeof(AdminLayout))]
 [RouteTitle("Admin Panel")]
+[RouteMiddleware(typeof(LoggingMiddleware))]
 [RouteGuard(typeof(AuthGuard))]
 [RouteGuard(typeof(AdminGuard))]
 [RouteTransition(RouteTransition.Fade)]
@@ -392,6 +492,7 @@ private List<RouteConfig> _routes = new List<RouteConfig>
 ```csharp
 [Route("/admin")]
 [RouteTransition(RouteTransition.Fade)]
+[RouteMiddleware(typeof(LoggingMiddleware))]
 [RouteGuard(typeof(AuthGuard))]
 [RouteTitle("Admin Panel")]
 public class AdminPage : ComponentBase { }
@@ -405,6 +506,7 @@ new RouteConfig
     Path = "/admin",
     Component = typeof(AdminPage),
     Transition = RouteTransition.Fade,
+    Middleware = new List<Type> { typeof(LoggingMiddleware) },
     Guards = new List<Type> { typeof(AuthGuard) },
     Title = "Admin Panel"
 }
@@ -421,6 +523,7 @@ The following table shows which `RouteConfig` properties are supported via attri
 | `Path` | ✅ Yes | `[Route("/path")]` | Required for attribute-based routing |
 | `Component` | ✅ Yes | (Inferred) | Automatically set to the decorated component type |
 | `Transition` | ✅ Yes | `[RouteTransition(...)]` | Supports all transition types |
+| `Middleware` | ✅ Yes | `[RouteMiddleware(typeof(...))]` | Can be applied multiple times |
 | `Guards` | ✅ Yes | `[RouteGuard(typeof(...))]` | Can be applied multiple times |
 | `Title` | ✅ Yes | `[RouteTitle("...")]` | Sets the route title |
 | `Layout` | ✅ Yes | `[RouteLayout(typeof(...))]` | Supports null for no layout |
@@ -430,7 +533,7 @@ The following table shows which `RouteConfig` properties are supported via attri
 | `ComponentLoader` | ❌ No | N/A | Requires async lambda - use programmatic config |
 | `Children` | ❌ No | N/A | Complex hierarchies - use programmatic config |
 
-**Coverage:** 9 out of 11 `RouteConfig` properties are supported via attributes (82% coverage).
+**Coverage:** 10 out of 12 `RouteConfig` properties are supported via attributes (83% coverage).
 
 The two unsupported properties (`ComponentLoader` and `Children`) require complex programmatic logic that cannot be expressed declaratively through attributes. For these scenarios, use traditional programmatic `RouteConfig` objects.
 

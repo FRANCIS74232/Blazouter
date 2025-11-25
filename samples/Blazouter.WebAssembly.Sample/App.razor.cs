@@ -1,6 +1,10 @@
 using Blazouter.Extensions;
 using Blazouter.Models;
 using Blazouter.Services;
+using Blazouter.WebAssembly.Sample.Guards;
+using Blazouter.WebAssembly.Sample.Middlewares;
+using Blazouter.WebAssembly.Sample.Pages;
+using Blazouter.WebAssembly.Sample.Pages.Users;
 using Microsoft.AspNetCore.Components;
 
 namespace Blazouter.WebAssembly.Sample
@@ -13,31 +17,31 @@ namespace Blazouter.WebAssembly.Sample
         {
             new() {
                 Path = "/",
-                Component = typeof(Pages.Home),
+                Component = typeof(Home),
                 Title = "Home",
                 Transition = RouteTransition.Blur
             },
             new() {
                 Path = "/about",
-                Component = typeof(Pages.About),
+                Component = typeof(About),
                 Title = "About",
                 Transition = RouteTransition.Fade
             },
             new() {
                 Path = "/navigation",
-                Component = typeof(Pages.Navigation),
+                Component = typeof(Navigation),
                 Title = "Navigation Demo",
                 Transition = RouteTransition.Flip
             },
             new() {
                 Path = "/transitions",
-                Component = typeof(Pages.Transitions),
+                Component = typeof(Transitions),
                 Title = "Transitions Demo",
                 Transition = RouteTransition.Lift
             },
             new() {
                 Path = "/users",
-                Component = typeof(Pages.Users.UserLayout),
+                Component = typeof(UserLayout),
                 Title = "Users",
                 Transition = RouteTransition.Swipe,
                 Children =
@@ -45,23 +49,24 @@ namespace Blazouter.WebAssembly.Sample
                     new RouteConfig
                     {
                         Path = "",
-                        Component = typeof(Pages.Users.UserList),
+                        Component = typeof(UserList),
                         Title = "User List",
                         Exact = true
                     },
                     new RouteConfig
                     {
                         Path = ":id",
-                        Component = typeof(Pages.Users.UserDetail),
-                        Title = "User Details"
+                        Component = typeof(UserDetail),
+                        Title = "User Details",
+                        Middleware = [typeof(DataPreloadMiddleware)]
                     }
                 ]
             },
             new() {
                 Path = "/protected",
-                Component = typeof(Pages.Protected),
+                Component = typeof(Protected),
                 Title = "Protected Page",
-                Guards = [typeof(Guards.AuthGuard)],
+                Guards = [typeof(AuthenticationGuard)],
                 Transition = RouteTransition.Rotate
             },
             new() {
@@ -69,14 +74,25 @@ namespace Blazouter.WebAssembly.Sample
                 ComponentLoader = async () =>
                 {
                     await Task.Delay(1000); // Simulate loading
-                    return typeof(Pages.LazyPage);
+                    return typeof(LazyPage);
                 },
                 Title = "Lazy Loaded Page",
                 Transition = RouteTransition.Curtain
             },
             new() {
+                Path = "/middleware",
+                Component = typeof(RouteMiddleware),
+                Title = "Middleware Example",
+                Middleware = [
+                    typeof(TimingMiddleware),
+                    typeof(LoggingMiddleware),
+                    typeof(AnalyticsMiddleware)
+                ],
+                Transition = RouteTransition.Slide
+            },
+            new() {
                 Path = "/error-example",
-                Component = typeof(Pages.ErrorExample),
+                Component = typeof(ErrorExample),
                 Title = "Error Example",
                 Transition = RouteTransition.Spotlight
             },
@@ -101,7 +117,7 @@ namespace Blazouter.WebAssembly.Sample
                         }
                     }
                     else{
-                        return typeof(Pages.ErrorExample);
+                        return typeof(ErrorExample);
                     }
                 },
                 Title = "Test Error"

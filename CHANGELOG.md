@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.12] - 2025-11-25
+
+### Added
+- **Route Middleware System**: Comprehensive middleware pipeline for cross-cutting concerns
+  - `IRouteMiddleware` interface for implementing custom route middleware
+  - `RouteMiddlewareContext` model providing access to route match, path, and shared data dictionary
+  - `RouteMiddlewareAttribute` for declarative middleware configuration on components
+  - Pipeline execution pattern with `InvokeAsync(context, next)` method signature
+  - Support for before/after navigation logic by placing code around the `next()` delegate call
+  - Ability to short-circuit navigation by not calling `next()`
+  - `Abort` and `RedirectPath` properties for conditional navigation control
+  - `Data` dictionary for sharing state between middleware and components
+  - Middleware instantiation via dependency injection or `Activator.CreateInstance` fallback
+  - Execution order: Middleware runs before route guards in the navigation pipeline
+  - Multiple middleware support with ordered execution based on declaration order
+  - `RouterErrorType.MiddlewareExecution` error type for middleware-specific error handling
+  - Common use cases: logging, analytics, performance monitoring, data preloading, caching, feature flags, A/B testing, session management, error tracking
+
+### Changed
+- Router component now executes middleware pipeline before guard evaluation
+- Enhanced `RouteConfig.Middleware` property with comprehensive XML documentation
+- Updated project structure to include Middleware directory
+
 ## [1.0.11] - 2025-11-24
 
 ### Added
@@ -174,6 +197,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FEATURES.md detailing all capabilities
 - Sample application demonstrating key features
 
+[1.0.12]: https://github.com/Taiizor/Blazouter/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/Taiizor/Blazouter/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/Taiizor/Blazouter/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/Taiizor/Blazouter/compare/v1.0.5...v1.0.9

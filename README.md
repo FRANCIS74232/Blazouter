@@ -44,8 +44,9 @@ Blazouter addresses the limitations of traditional Blazor routing:
 - **🏷️ Attribute-Based Routing**: Declarative route configuration using attributes
 - **📐 Layout System**: Flexible layout management with default and per-route layouts
 - **🔗 Programmatic Navigation**: Navigate imperatively with enhanced navigation service
-- **⚠️ Error Handling**: Comprehensive error handling with custom error handlers and retry mechanisms
+- **🔧 Route Middleware**: Execute code before/after navigation for logging, analytics, data preloading
 - **🔧 Query String Utilities**: Type-safe query string builder and typed parameter parsing with fluent API
+- **⚠️ Error Handling**: Comprehensive error handling with custom error handlers and retry mechanisms
 - **🎨 Route Transitions**: Beautiful animations when navigating between routes with 14 built-in transition types
 
 ## 📦 Available Packages
@@ -453,7 +454,73 @@ Use `<RouterOutlet />` in the parent component to render child routes:
 </div>
 ```
 
+### Route Middleware
+
+Execute code before and after route navigation for logging, analytics, data preloading, and more:
+
+```csharp
+new RouteConfig
+{
+    Path = "/admin",
+    Component = typeof(AdminPanel),
+    Middleware = new List<Type> 
+    { 
+        typeof(LoggingMiddleware),
+        typeof(TimingMiddleware),
+        typeof(AnalyticsMiddleware)
+    }
+}
+```
+
+Create a middleware:
+
+```csharp
+using Blazouter.Models;
+using Blazouter.Middleware;
+
+public class LoggingMiddleware : IRouteMiddleware
+{
+    public async Task InvokeAsync(RouteMiddlewareContext context, Func<Task> next)
+    {
+        // Before navigation
+        Console.WriteLine($"Navigating to: {context.Path}");
+        
+        // Continue to next middleware or component
+        await next();
+        
+        // After navigation
+        Console.WriteLine($"Navigation completed");
+    }
+}
+```
+
+Middleware can share data with components:
+
+```csharp
+public class DataPreloadMiddleware : IRouteMiddleware
+{
+    public async Task InvokeAsync(RouteMiddlewareContext context, Func<Task> next)
+    {
+        // Store data - will only be passed if component has matching parameter
+        context.Data["PreloadedData"] = await LoadDataAsync();
+        context.Data["LoadTimestamp"] = DateTime.UtcNow;
+        
+        await next();
+    }
+}
+
+// In your component - only define parameters you need
+[Parameter]
+public object? PreloadedData { get; set; }
+
+// LoadTimestamp is automatically filtered out if not defined
+```
+
+**Note:** The Router automatically filters both middleware data and route data to only pass parameters that the component actually has. You can store any data in `context.Data` or use `RouteData` attributes without worrying about parameter mismatch errors.
+
 ### Route Guards (Protected Routes)
+
+Control access to routes based on authentication or authorization:
 
 ```csharp
 new RouteConfig
@@ -613,8 +680,8 @@ Blazouter includes 14 built-in transitions for beautiful page navigation:
 - `Flip` - 3D card flip animation
 - `Slide` - Slide from left animation
 - `Pop` - Bounce effect with elastic easing
-- `None` - No transition animation (instant)
 - `SlideUp` - Slide from bottom animation
+- `None` - No transition animation (instant)
 - `Rotate` - Spinning entrance along Z-axis
 - `Reveal` - Mask opening from bottom to top
 - `SlideFade` - Combined slide and fade effect
@@ -791,7 +858,7 @@ Inspired by React Router and built to bring similar capabilities to the Blazor e
 
 ## 📝 Roadmap
 
-- [ ] Route middleware support
+- [x] Route middleware support
 - [ ] Performance optimizations
 - [ ] Advanced caching strategies
 - [x] Query string helpers and utilities

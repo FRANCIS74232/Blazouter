@@ -1,9 +1,14 @@
+using Microsoft.AspNetCore.Components;
+
 namespace Blazouter.WebAssembly.Sample.Pages.Users
 {
     public partial class UserDetail
     {
         private string? _userId;
         private UserModel? _user;
+
+        [Parameter]
+        public object? PreloadedData { get; set; }
 
         protected override void OnInitialized()
         {

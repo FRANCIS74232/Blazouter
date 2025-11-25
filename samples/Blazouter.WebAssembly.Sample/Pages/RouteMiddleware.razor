@@ -1,0 +1,163 @@
+@inject RouterStateService RouterState
+@inject RouterNavigationService NavService
+
+<div class="container-fluid py-5 px-4 bg-gray-50 dark:bg-gray-900 min-h-screen">
+	<div class="max-w-6xl mx-auto">
+		<h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
+			🔧 Route Middleware Example
+		</h1>
+		<p class="text-gray-600 dark:text-gray-400 mb-6">
+			Middleware executes code before and after route navigation
+		</p>
+
+		<div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+			<div class="flex items-start">
+				<div class="flex-shrink-0">
+					<svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+						<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+					</svg>
+				</div>
+				<div class="ml-3">
+					<p class="text-sm text-blue-700 dark:text-blue-300">
+						Open the browser console (F12) to see middleware logs in action!
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+			<!-- Logging Middleware -->
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+				<div class="bg-blue-600 px-4 py-3 text-white font-semibold">
+					📝 Logging Middleware
+				</div>
+				<div class="p-4">
+					<p class="text-gray-700 dark:text-gray-300 mb-3">Logs navigation events to the console.</p>
+					<ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+						<li>• Logs before navigation starts</li>
+						<li>• Logs after navigation completes</li>
+						<li>• Shows the target path and route pattern</li>
+					</ul>
+					@if (NavigationDuration != null)
+					{
+						<div class="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded text-sm">
+							<strong class="text-blue-700 dark:text-blue-300">Navigation took:</strong>
+							<span class="text-gray-900 dark:text-white">@NavigationDuration.Value.TotalMilliseconds ms</span>
+						</div>
+					}
+				</div>
+			</div>
+
+			<!-- Timing Middleware -->
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+				<div class="bg-green-600 px-4 py-3 text-white font-semibold">
+					⏱️ Timing Middleware
+				</div>
+				<div class="p-4">
+					<p class="text-gray-700 dark:text-gray-300 mb-3">Measures navigation performance.</p>
+					<ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+						<li>• Records navigation start time</li>
+						<li>• Calculates navigation duration</li>
+						<li>• Stores timing data in context</li>
+					</ul>
+				</div>
+			</div>
+
+			<!-- Analytics Middleware -->
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+				<div class="bg-yellow-500 px-4 py-3 text-white font-semibold">
+					📊 Analytics Middleware
+				</div>
+				<div class="p-4">
+					<p class="text-gray-700 dark:text-gray-300 mb-3">Tracks page views for analytics.</p>
+					<ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+						<li>• Generates unique page view IDs</li>
+						<li>• Records timestamps</li>
+						<li>• Captures route metadata</li>
+					</ul>
+					@if (PageViewId != null)
+					{
+						<div class="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded text-xs break-all">
+							<strong class="text-yellow-700 dark:text-yellow-300">View ID:</strong><br />
+							<code class="text-gray-900 dark:text-white font-mono">@PageViewId</code>
+						</div>
+					}
+				</div>
+			</div>
+
+			<!-- Data Preload Middleware -->
+			<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+				<div class="bg-purple-600 px-4 py-3 text-white font-semibold">
+					💾 Data Preload Middleware
+				</div>
+				<div class="p-4">
+					<p class="text-gray-700 dark:text-gray-300 mb-3">Preloads data during navigation.</p>
+					<ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+						<li>• Fetches data based on route parameters</li>
+						<li>• Makes data available to components</li>
+						<li>• Reduces component initialization time</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<!-- How It Works -->
+		<div class="bg-white dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden mb-6">
+			<div class="bg-gray-800 dark:bg-gray-900 px-4 py-3 text-white font-semibold">
+				💡 How It Works
+			</div>
+			<div class="p-6">
+				<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Pipeline Execution</h3>
+				<p class="text-gray-600 dark:text-gray-400 mb-3">Middleware execute in a pipeline pattern:</p>
+				<ol class="list-decimal list-inside space-y-2 text-gray-700 dark:text-gray-300 mb-6">
+					<li><strong>LoggingMiddleware</strong> - Logs the start of navigation</li>
+					<li><strong>TimingMiddleware</strong> - Starts a stopwatch</li>
+					<li><strong>AnalyticsMiddleware</strong> - Records page view</li>
+					<li><strong>DataPreloadMiddleware</strong> - Fetches data (if needed)</li>
+					<li><em class="text-gray-500">Navigation completes</em></li>
+					<li>Middleware execute "after" logic in reverse order</li>
+				</ol>
+
+				<h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Declaring Middleware</h3>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+					<div>
+						<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Programmatic:</h4>
+						<pre class="bg-gray-100 dark:bg-gray-900 p-3 rounded text-xs overflow-x-auto"><code class="text-gray-800 dark:text-gray-200">new RouteConfig
+{
+    Path = "/middleware",
+    Component = typeof(Middleware),
+    Middleware = new List&lt;Type&gt;
+    {
+        typeof(LoggingMiddleware),
+        typeof(TimingMiddleware),
+        typeof(AnalyticsMiddleware)
+    }
+}</code></pre>
+					</div>
+					<div>
+						<h4 class="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Attribute-based:</h4>
+						<pre class="bg-gray-100 dark:bg-gray-900 p-3 rounded text-xs overflow-x-auto"><code class="text-gray-800 dark:text-gray-200">[Route("/middleware-example")]
+[RouteMiddleware(typeof(LoggingMiddleware))]
+[RouteMiddleware(typeof(TimingMiddleware))]
+[RouteMiddleware(typeof(AnalyticsMiddleware))]
+public class Middleware : ComponentBase
+{
+    // Component code
+}</code></pre>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Test Navigation -->
+		<div class="flex items-center gap-4">
+			<div @onclick="@(() => NavService.NavigateTo($"/users/3"))" class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors cursor-pointer">
+				Navigate to User Detail (ID: 123)
+				<svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+				</svg>
+			</div>
+			<span class="text-sm text-gray-500 dark:text-gray-400">Try navigating to see DataPreloadMiddleware in action</span>
+		</div>
+	</div>
+</div>

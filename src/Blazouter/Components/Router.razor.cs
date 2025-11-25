@@ -1,9 +1,11 @@
 using Blazouter.Components.Layouts;
 using Blazouter.Guards;
+using Blazouter.Middleware;
 using Blazouter.Models;
 using Blazouter.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Routing;
+using System.Reflection;
 
 namespace Blazouter.Components
 {
@@ -462,12 +464,33 @@ namespace Blazouter.Components
                 return;
             }
 
-            // Execute guards
-            if (match != null && match.Route.Guards.Count != 0)
+            // Execute middleware - use the deepest child route's middleware if present
+            RouteMatch? middlewareMatch = GetDeepestMatch(match);
+            if (middlewareMatch != null && middlewareMatch.Route.Middleware.Count != 0)
             {
                 try
                 {
-                    bool canActivate = await ExecuteGuards(match);
+                    bool canContinue = await ExecuteMiddleware(middlewareMatch);
+                    if (!canContinue)
+                    {
+                        return;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await HandleRoutingError(ex, RouterErrorType.MiddlewareExecution,
+                        _currentPath, middlewareMatch.Route.Path, null);
+                    return;
+                }
+            }
+
+            // Execute guards - use the deepest child route's guards if present
+            RouteMatch? guardMatch = GetDeepestMatch(match);
+            if (guardMatch != null && guardMatch.Route.Guards.Count != 0)
+            {
+                try
+                {
+                    bool canActivate = await ExecuteGuards(guardMatch);
                     if (!canActivate)
                     {
                         return;
@@ -476,7 +499,7 @@ namespace Blazouter.Components
                 catch (Exception ex)
                 {
                     await HandleRoutingError(ex, RouterErrorType.GuardExecution,
-                        _currentPath, match.Route.Path, null);
+                        _currentPath, guardMatch.Route.Path, null);
                     return;
                 }
             }
@@ -555,13 +578,33 @@ namespace Blazouter.Components
                 // Update layout type - @key directive in Router.razor will preserve instance
                 _layoutType = newLayoutType;
 
-                // Build parameters for the component - only include route data
+                // Build parameters for the component - include route data and middleware context data
                 _componentParameters = [];
 
-                // Add route data as parameters
-                foreach (KeyValuePair<string, object> data in match.Route.Data)
+                // Add route data as parameters (only if component has matching properties)
+                if (_componentType != null)
                 {
-                    _componentParameters[data.Key] = data.Value;
+                    foreach (KeyValuePair<string, object> data in match.Route.Data)
+                    {
+                        // Only add parameter if component has a matching [Parameter] property
+                        if (ComponentHasParameter(_componentType, data.Key))
+                        {
+                            _componentParameters[data.Key] = data.Value;
+                        }
+                    }
+                }
+
+                // Add middleware context data as parameters (only if component has matching properties)
+                if (_middlewareContextData != null && _componentType != null)
+                {
+                    foreach (KeyValuePair<string, object> data in _middlewareContextData)
+                    {
+                        // Only add parameter if component has a matching [Parameter] property
+                        if (ComponentHasParameter(_componentType, data.Key))
+                        {
+                            _componentParameters[data.Key] = data.Value;
+                        }
+                    }
                 }
 
                 // Set transition class
@@ -639,6 +682,155 @@ namespace Blazouter.Components
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Stores middleware context data for the current navigation.
+        /// </summary>
+        private Dictionary<string, object>? _middlewareContextData = null;
+
+        /// <summary>
+        /// Executes all route middleware for the given route match in a pipeline.
+        /// </summary>
+        /// <param name="match">The route match containing the middleware to execute.</param>
+        /// <returns>
+        /// A task that resolves to true if navigation should proceed,
+        /// or false if any middleware aborts navigation.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// Middleware are executed in the order they appear in the route configuration.
+        /// Each middleware can execute logic before and after navigation by placing code
+        /// before and after the next() delegate call.
+        /// </para>
+        /// <para>
+        /// If middleware sets context.Abort to true, the pipeline stops executing and
+        /// navigation is cancelled. If context.RedirectPath is also set, navigation
+        /// occurs to that path instead.
+        /// </para>
+        /// <para>
+        /// Middleware are obtained from the dependency injection container first. If not registered,
+        /// the router attempts to create an instance using Activator.CreateInstance. If both
+        /// fail, the middleware is skipped (allowing navigation to proceed).
+        /// </para>
+        /// </remarks>
+        private async Task<bool> ExecuteMiddleware(RouteMatch match)
+        {
+            RouteMiddlewareContext context = new()
+            {
+                Match = match,
+                Path = _currentPath
+            };
+
+            // Build the middleware pipeline
+            //Func<Task> pipeline = () => Task.CompletedTask;
+            Func<Task> pipeline = async () => await Task.CompletedTask;
+
+            // Build pipeline in reverse order so they execute in forward order
+            for (int i = match.Route.Middleware.Count - 1; i >= 0; i--)
+            {
+                Type middlewareType = match.Route.Middleware[i];
+                IRouteMiddleware? middleware = ServiceProvider.GetService(middlewareType) as IRouteMiddleware;
+
+                if (middleware == null)
+                {
+                    // Try to create instance if not registered
+                    try
+                    {
+                        middleware = Activator.CreateInstance(middlewareType) as IRouteMiddleware;
+                    }
+                    catch (Exception ex) when (ex is MissingMethodException or ArgumentException or
+                                                NotSupportedException or TargetInvocationException or
+                                                MethodAccessException or InvalidOperationException)
+                    {
+                        // Skip this middleware if we can't create it
+                        // Common exceptions from Activator.CreateInstance for invalid types
+                        continue;
+                    }
+                }
+
+                if (middleware != null)
+                {
+                    Func<Task> next = pipeline;
+                    pipeline = async () =>
+                    {
+                        await middleware.InvokeAsync(context, next);
+                    };
+                }
+            }
+
+            // Execute the pipeline
+            await pipeline();
+
+            // Store middleware context data for components to access
+            _middlewareContextData = context.Data.Count > 0 ? context.Data : null;
+
+            // Check if navigation should be aborted
+            if (context.Abort)
+            {
+                if (context.RedirectPath != null)
+                {
+                    NavigationManager.NavigateTo(context.RedirectPath);
+                }
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the deepest child match in a route match hierarchy.
+        /// </summary>
+        /// <param name="match">The root route match to search.</param>
+        /// <returns>The deepest child match, or the provided match if no children exist.</returns>
+        /// <remarks>
+        /// For nested routes, this method traverses the Child chain to find the innermost matched route.
+        /// This is useful for accessing middleware, guards, and other properties defined on the most
+        /// specific matched route rather than the parent.
+        /// </remarks>
+        private static RouteMatch? GetDeepestMatch(RouteMatch? match)
+        {
+            if (match == null)
+            {
+                return null;
+            }
+
+            RouteMatch current = match;
+            while (current.Child != null)
+            {
+                current = current.Child;
+            }
+
+            return current;
+        }
+
+        /// <summary>
+        /// Checks if a component type has a property with the [Parameter] attribute matching the given name.
+        /// </summary>
+        /// <param name="componentType">The component type to check.</param>
+        /// <param name="parameterName">The name of the parameter to look for.</param>
+        /// <returns>True if the component has a matching parameter property; otherwise, false.</returns>
+        /// <remarks>
+        /// This method uses reflection to check if the component has a public property with the
+        /// specified name that is decorated with the [Parameter] or [CascadingParameter] attribute.
+        /// This allows middleware to safely pass data to components without causing errors when
+        /// components don't have matching parameters.
+        /// </remarks>
+        private static bool ComponentHasParameter(Type componentType, string parameterName)
+        {
+            // Get all public instance properties
+            PropertyInfo? property = componentType.GetProperty(
+                parameterName,
+                BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+            if (property == null)
+            {
+                return false;
+            }
+
+            // Check if property has [Parameter] or [CascadingParameter] attribute
+            return property.GetCustomAttribute<ParameterAttribute>() != null ||
+                   property.GetCustomAttribute<CascadingParameterAttribute>() != null;
         }
 
         /// <summary>
