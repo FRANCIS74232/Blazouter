@@ -1,6 +1,6 @@
 using Blazouter.Models;
 
-namespace Blazouter.Guards
+namespace Blazouter.Interfaces
 {
     /// <summary>
     /// Defines a contract for route guards that control access to routes based on custom logic.

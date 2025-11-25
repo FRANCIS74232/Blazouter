@@ -1,4 +1,4 @@
-using Blazouter.Middleware;
+using Blazouter.Interfaces;
 using Blazouter.Models;
 
 namespace Blazouter.WebAssembly.Sample.Middlewares

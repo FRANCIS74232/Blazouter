@@ -1,4 +1,4 @@
-using Blazouter.Services;
+using Blazouter.Enums;
 
 namespace Blazouter.Models
 {

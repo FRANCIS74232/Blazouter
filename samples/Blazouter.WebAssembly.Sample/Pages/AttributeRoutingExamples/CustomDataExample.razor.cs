@@ -1,5 +1,5 @@
 using Blazouter.Attributes;
-using Blazouter.Models;
+using Blazouter.Enums;
 using Microsoft.AspNetCore.Components;
 using RouteAttribute = Blazouter.Attributes.RouteAttribute;
 

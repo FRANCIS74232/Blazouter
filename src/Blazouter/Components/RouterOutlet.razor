@@ -4,11 +4,11 @@
 
 @if (_childMatch != null && _childComponentType != null)
 {
-    <div class="blazouter-outlet @_transitionClass" @key="_componentKey">
-        <DynamicComponent Type="_childComponentType" Parameters="@_componentParameters" />
-    </div>
+	<div class="blazouter-outlet @_transitionClass" @key="_componentKey">
+		<DynamicComponent Type="_childComponentType" Parameters="@_componentParameters" />
+	</div>
 }
 else if (DefaultContent != null)
 {
-    @DefaultContent
+	@DefaultContent
 }

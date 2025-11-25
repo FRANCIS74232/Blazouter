@@ -1,3 +1,5 @@
+using Blazouter.Enums;
+
 namespace Blazouter.Models
 {
     /// <summary>

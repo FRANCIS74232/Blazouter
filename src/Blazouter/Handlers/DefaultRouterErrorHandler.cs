@@ -1,6 +1,8 @@
+using Blazouter.Interfaces;
+using Blazouter.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Blazouter.Services
+namespace Blazouter.Handlers
 {
     /// <summary>
     /// Provides a default implementation of <see cref="IRouterErrorHandler"/> with structured error logging.

@@ -1,4 +1,5 @@
-using Blazouter.Services;
+using Blazouter.Interfaces;
+using Blazouter.Models;
 
 namespace Blazouter.Web.Client.Sample.Services
 {

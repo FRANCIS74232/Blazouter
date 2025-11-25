@@ -3,10 +3,10 @@
 
 @implements IDisposable
 
-<a href="@Href" 
-   class="@CombinedClass" 
-   @onclick="OnClick" 
+<a href="@Href"
+   class="@CombinedClass"
+   @onclick="OnClick"
    @onclick:preventDefault="PreventDefault"
    @attributes="AdditionalAttributes">
-    @ChildContent
+	@ChildContent
 </a>

@@ -1,3 +1,4 @@
+using Blazouter.Interfaces;
 using Blazouter.Models;
 
 namespace Blazouter.Services

@@ -1,4 +1,6 @@
-namespace Blazouter.Services
+using Blazouter.Models;
+
+namespace Blazouter.Interfaces
 {
     /// <summary>
     /// Defines a contract for handling routing errors in Blazouter applications.

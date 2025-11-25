@@ -189,8 +189,9 @@ public partial class ProductsPage : ComponentBase
 ### Basic Example
 
 ```csharp
-using Blazouter.Attributes;
+using Blazouter.Enums;
 using Blazouter.Models;
+using Blazouter.Attributes;
 using Microsoft.AspNetCore.Components;
 
 namespace MyApp.Pages
@@ -208,8 +209,9 @@ namespace MyApp.Pages
 ### Complete Example with All Attributes
 
 ```csharp
-using Blazouter.Attributes;
+using Blazouter.Enums;
 using Blazouter.Models;
+using Blazouter.Attributes;
 using Microsoft.AspNetCore.Components;
 
 namespace MyApp.Pages

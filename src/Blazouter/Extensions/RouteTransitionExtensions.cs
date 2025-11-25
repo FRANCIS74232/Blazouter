@@ -1,4 +1,6 @@
-namespace Blazouter.Models
+using Blazouter.Enums;
+
+namespace Blazouter.Extensions
 {
     /// <summary>
     /// Provides extension methods for the <see cref="RouteTransition"/> enumeration.

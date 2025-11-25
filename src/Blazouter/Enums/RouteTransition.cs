@@ -1,4 +1,4 @@
-namespace Blazouter.Models
+namespace Blazouter.Enums
 {
     /// <summary>
     /// Defines the available transition animations for route navigation.

@@ -1,4 +1,4 @@
-namespace Blazouter.Services
+namespace Blazouter.Enums
 {
     /// <summary>
     /// Defines the types of errors that can occur during routing operations in Blazouter.

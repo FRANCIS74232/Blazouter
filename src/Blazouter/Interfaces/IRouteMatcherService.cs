@@ -1,6 +1,6 @@
 using Blazouter.Models;
 
-namespace Blazouter.Services
+namespace Blazouter.Interfaces
 {
     /// <summary>
     /// Defines a contract for services that match URL paths to route configurations.

@@ -1,4 +1,4 @@
-using Blazouter.Guards;
+using Blazouter.Interfaces;
 using Blazouter.Models;
 
 namespace Blazouter.WebAssembly.Sample.Guards

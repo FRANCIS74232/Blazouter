@@ -1,4 +1,6 @@
-namespace Blazouter.Services
+using Blazouter.Enums;
+
+namespace Blazouter.Models
 {
     /// <summary>
     /// Provides detailed contextual information about a routing error for error handlers and logging.

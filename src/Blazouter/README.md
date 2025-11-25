@@ -201,8 +201,8 @@ new RouteConfig
 Create custom guards by implementing `IRouteGuard`:
 
 ```csharp
-using Blazouter.Guards;
 using Blazouter.Models;
+using Blazouter.Interfaces;
 
 public class AuthGuard : IRouteGuard
 {

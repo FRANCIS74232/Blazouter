@@ -1,6 +1,6 @@
 using Blazouter.Models;
 
-namespace Blazouter.Middleware
+namespace Blazouter.Interfaces
 {
     /// <summary>
     /// Defines a contract for route middleware that executes logic during navigation.

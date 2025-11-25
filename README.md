@@ -26,13 +26,19 @@ Blazouter addresses the limitations of traditional Blazor routing:
 
 | Feature | React Router | Blazor Router | **Blazouter** |
 |---------|--------------|---------------|---------------|
-| Lazy Loading | ✔ Route-based code splitting | ❌ Still limited in WASM | ✅ Full support |
-| Route Guards | ✔ Easy with wrappers/hooks | ❌ Manual, component-based | ✅ Built-in guard system |
-| Nested Routes | ✔ Easy to define child routes | ❌ Limited, single level with `@page` | ✅ Full support |
-| Dynamic Params | ✔ Easy route parameters | ✔ Available but basic | ✅ Enhanced with easy access |
-| Route Transitions | ✔ Very easy | ❌ No native support | ✅ Built-in transitions |
-| Conditional Rendering | ✔ Direct with `<Route>` | ❌ Manual via state | ✅ Component-based |
-| Programmatic Navigation | ✔ `navigate("/path")` | ✔ `NavigationManager.NavigateTo` | ✅ Enhanced navigation service |
+| Active Links | ✔ Built-in NavLink | ⚠️ Manual active class | ✅ Automatic with RouterLink |
+| Lazy Loading | ✔ Route-based code splitting | ❌ Still limited in WASM | ✅ Full support with ComponentLoader |
+| Route Guards | ✔ Easy with wrappers/hooks | ❌ Manual, component-based | ✅ Built-in IRouteGuard interface |
+| Layout System | ✔ Component composition | ⚠️ Static @layout | ✅ Dynamic per-route with priority |
+| Nested Routes | ✔ Easy to define child routes | ❌ Limited, single level with `@page` | ✅ Unlimited nesting with RouterOutlet |
+| Error Handling | ✔ Error boundaries | ❌ Manual | ✅ Built-in IRouterErrorHandler |
+| Attribute Routes | ✔ JSX-based | ❌ @page only | ✅ 9 attribute types with full config |
+| Dynamic Params | ✔ Easy route parameters | ✔ Available but basic | ✅ Enhanced with RouterStateService |
+| Route Transitions | ✔ Very easy | ❌ No native support | ✅ 14 built-in transition types |
+| Route Middleware | ✔ Route-level middleware | ❌ No native support | ✅ Built-in IRouteMiddleware interface |
+| Query String Helpers | ✔ URLSearchParams API | ❌ Manual parsing | ✅ Type-safe fluent API with 30+ methods |
+| Conditional Rendering | ✔ Direct with `<Route>` | ❌ Manual via state | ✅ Component-based rendering |
+| Programmatic Navigation | ✔ `navigate("/path")` | ✔ `NavigationManager.NavigateTo` | ✅ Enhanced RouterNavigationService |
 
 ### Key Features
 
@@ -45,8 +51,8 @@ Blazouter addresses the limitations of traditional Blazor routing:
 - **📐 Layout System**: Flexible layout management with default and per-route layouts
 - **🔗 Programmatic Navigation**: Navigate imperatively with enhanced navigation service
 - **🔧 Route Middleware**: Execute code before/after navigation for logging, analytics, data preloading
-- **🔧 Query String Utilities**: Type-safe query string builder and typed parameter parsing with fluent API
 - **⚠️ Error Handling**: Comprehensive error handling with custom error handlers and retry mechanisms
+- **🔧 Query String Utilities**: Type-safe query string builder and typed parameter parsing with fluent API
 - **🎨 Route Transitions**: Beautiful animations when navigating between routes with 14 built-in transition types
 
 ## 📦 Available Packages
@@ -326,6 +332,7 @@ app.MapRazorComponents<App>()
 Define routes declaratively using attributes directly on your components:
 
 ```csharp
+using Blazouter.Enums;
 using Blazouter.Models;
 using Blazouter.Attributes;
 using Microsoft.AspNetCore.Components;
@@ -476,7 +483,7 @@ Create a middleware:
 
 ```csharp
 using Blazouter.Models;
-using Blazouter.Middleware;
+using Blazouter.Interfaces;
 
 public class LoggingMiddleware : IRouteMiddleware
 {
@@ -534,8 +541,8 @@ new RouteConfig
 Create a guard:
 
 ```csharp
-using Blazouter.Guards;
 using Blazouter.Models;
+using Blazouter.Interfaces;
 
 public class AuthGuard : IRouteGuard
 {
@@ -762,11 +769,14 @@ Blazouter/
 │   │   ├── Attributes/            # Route attribute definitions
 │   │   ├── Components/            # Router components (Router, RouterLink, RouterOutlet)
 │   │   │   └── Layouts/           # Built-in layout components
-│   │   ├── Extensions/            # Service collection and router extensions (typed query parameters, navigation)
-│   │   ├── Guards/                # Route guard interfaces
-│   │   ├── Models/                # Route models (RouteConfig, RouteMatch, RouteTransition)
+│   │   ├── Enums/                 # Enumeration types (RouteTransition, RouterErrorType)
+│   │   ├── Extensions/            # Service collection and router extensions (typed query parameters, navigation, transitions)
+│   │   ├── Guards/                # Route guard implementations (AuthGuard)
+│   │   ├── Handlers/              # Error handler implementations (DefaultRouterErrorHandler)
+│   │   ├── Interfaces/            # Interface definitions (IRouteGuard, IRouteMiddleware, IRouteMatcherService, IRouterErrorHandler)
+│   │   ├── Models/                # Route models (RouteConfig, RouteMatch, RouterErrorContext, etc.)
 │   │   ├── Resources/             # Embedded resources
-│   │   ├── Services/              # Routing services (RouterStateService, RouteMatcherService, etc.)
+│   │   ├── Services/              # Routing services (RouterStateService, RouteMatcherService, RouterNavigationService, etc.)
 │   │   ├── Utilities/             # Query string builder and helper utilities
 │   │   └── wwwroot/               # CSS and assets (blazouter.css, blazouter.min.css)
 │   ├── Blazouter.Server/          # Server-specific extensions

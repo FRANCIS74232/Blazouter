@@ -1,5 +1,5 @@
 using Blazouter.Attributes;
-using Blazouter.Models;
+using Blazouter.Enums;
 using Blazouter.Services;
 using Blazouter.WebAssembly.Sample.Middlewares;
 using Microsoft.AspNetCore.Components;

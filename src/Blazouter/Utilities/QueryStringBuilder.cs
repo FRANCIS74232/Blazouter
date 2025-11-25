@@ -465,6 +465,70 @@ namespace Blazouter.Utilities
         }
 
         /// <summary>
+        /// Sets multiple values for the same parameter in the query string, replacing any existing values.
+        /// </summary>
+        /// <param name="key">The parameter name.</param>
+        /// <param name="values">The collection of values to set.</param>
+        /// <returns>The current QueryStringBuilder instance for method chaining.</returns>
+        /// <remarks>
+        /// <para>
+        /// Unlike AddRange(), this method removes any existing values for the key before adding the new values.
+        /// Use SetRange() when you want to replace all parameter values, and AddRange() when you want to append values.
+        /// </para>
+        /// <para>
+        /// This is useful for array-like parameters (e.g., "tag=a&amp;tag=b&amp;tag=c").
+        /// Null values in the collection are ignored.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var builder = new QueryStringBuilder()
+        ///     .AddRange("tag", new[] { "a", "b" })
+        ///     .SetRange("tag", new[] { "c", "d" });  // Replaces previous values
+        /// // Result: "tag=c&amp;tag=d" (not "tag=a&amp;tag=b&amp;tag=c&amp;tag=d")
+        /// </code>
+        /// </example>
+        public QueryStringBuilder SetRange(string key, IEnumerable<string>? values)
+        {
+            if (values == null)
+            {
+                return this;
+            }
+
+            _parameters.Remove(key);
+
+            foreach (string? value in values.Where(v => v != null))
+            {
+                Add(key, value);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Conditionally sets a parameter in the query string, replacing any existing value.
+        /// </summary>
+        /// <param name="condition">If true, the parameter is set; otherwise, it's skipped.</param>
+        /// <param name="key">The parameter name.</param>
+        /// <param name="value">The parameter value.</param>
+        /// <returns>The current QueryStringBuilder instance for method chaining.</returns>
+        /// <remarks>
+        /// Unlike AddIf(), this method removes any existing values for the key before adding the new value.
+        /// Use SetIf() when you want to replace a parameter value, and AddIf() when you want to append values.
+        /// </remarks>
+        /// <example>
+        /// <code>
+        /// var builder = new QueryStringBuilder()
+        ///     .Add("page", 1)
+        ///     .SetIf(hasNextPage, "page", nextPageNum);  // Replaces previous value if condition is true
+        /// </code>
+        /// </example>
+        public QueryStringBuilder SetIf(bool condition, string key, string? value)
+        {
+            return condition ? Set(key, value) : this;
+        }
+
+        /// <summary>
         /// Removes all parameters with the specified key from the query string.
         /// </summary>
         /// <param name="key">The parameter name to remove.</param>

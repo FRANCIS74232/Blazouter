@@ -1,4 +1,4 @@
-using Blazouter.Models;
+using Blazouter.Enums;
 
 namespace Blazouter.Attributes
 {

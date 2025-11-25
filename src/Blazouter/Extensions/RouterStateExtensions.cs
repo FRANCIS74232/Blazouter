@@ -337,7 +337,7 @@ namespace Blazouter.Extensions
         public static string[] GetQueryArray(this RouterStateService routerState, string key)
         {
             string? value = routerState.GetQuery(key);
-            return value != null ? new[] { value } : Array.Empty<string>();
+            return value != null ? [value] : [];
         }
 
         /// <summary>
