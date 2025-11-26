@@ -147,6 +147,56 @@ Blazouter is a comprehensive routing library for Blazor applications, available 
 - Sample application demonstrates all features in Navigation.razor and UserList.razor
 - 15 `Add()` method overloads for all common types (string, int, long, decimal, double, bool, DateTime, Guid, enum, and nullable variants)
 
+### ✅ 13. TypeScript Integration for JavaScript Interop
+- Tested and verified working
+- Type-safe JavaScript modules with `.d.ts` definition files for IntelliSense
+- Comprehensive browser API integration with 5 specialized interop services
+- Automatic TypeScript compilation to JavaScript with source maps
+- Global namespace exposure pattern (`window.blazouterNavigation`, `window.blazouterDocument`, `window.blazouterStorage`, `window.blazouterViewport`, `window.blazouterClipboard`)
+- Optional service registration via `AddBlazouterInterop()`
+- **`NavigationInterop`** service for History API access
+  - Navigate back/forward/go in browser history
+  - URL and path information (getCurrentUrl, getPathname)
+  - Hash navigation (getHash, setHash)
+  - Query parameter helpers (getQueryString, getQueryParam, getAllQueryParams)
+  - Page reload functionality
+  - Check navigation availability
+  - Manage history state (push and replace entries)
+- **`DocumentInterop`** service for document manipulation
+  - Dynamic title updates
+  - Meta tag management (description, keywords, Open Graph tags)
+  - Canonical URL support for SEO
+  - Scroll position tracking (getScrollPosition, setScrollPosition)
+  - Scroll to top/element with smooth scrolling
+  - Element visibility detection (isElementVisible)
+  - CSS class manipulation (addClass, removeClass, toggleClass)
+  - Document ready state checks
+  - Element focus management
+- **`StorageInterop`** service for browser storage
+  - Complete localStorage operations (set, get, remove, clear, keys, has)
+  - Complete sessionStorage operations (set, get, remove, clear, keys, has)
+  - Generic type support with JSON serialization
+  - Type-safe storage access for complex objects
+- **`ViewportInterop`** service for viewport and device info
+  - Viewport dimensions (getViewportSize, width, height)
+  - Screen information (getScreenSize)
+  - Device pixel ratio detection
+  - Orientation detection (isPortrait, isLandscape, getOrientation)
+  - Device type detection (isMobile, isTablet, isDesktop, getDeviceType)
+  - Fullscreen API (isFullscreen, requestFullscreen, exitFullscreen)
+- **`ClipboardInterop`** service for clipboard operations
+  - Copy text to clipboard with fallback for older browsers
+  - Read text from clipboard
+  - Feature detection (isClipboardSupported)
+  - Permission checks (hasClipboardReadPermission, hasClipboardWritePermission)
+- Integration with `RouterNavigationService`
+  - `GoBackAsync()` - True browser back navigation
+  - `GoForwardAsync()` - Browser forward navigation
+  - `CanGoBackAsync()` - Check if back navigation is available
+- Requires JavaScript module import: `<script type="module" src="_content/Blazouter/js/index.js"></script>`
+- Full documentation in [TYPESCRIPT_INTEGRATION.md](https://github.com/Taiizor/Blazouter/blob/develop/TYPESCRIPT_INTEGRATION.md)
+- Comprehensive demo page in WebAssembly sample at `/typescript-demo` showcasing all 5 interop services
+
 ## Components
 
 ### Router
@@ -197,6 +247,26 @@ Nested route renderer that:
 - Query parameter handling and URL building
 - Programmatic navigation API with NavigateTo(path)
 - Wrapper around NavigationManager for enhanced functionality
+- Async methods for browser navigation: GoBackAsync(), GoForwardAsync(), CanGoBackAsync()
+
+### NavigationInterop (Optional)
+- Registered as scoped service via AddBlazouterInterop()
+- Type-safe access to browser History API
+- Navigate back and forward in history
+- Check history length and navigation availability
+- Manage history state (push, replace, get)
+- Requires JavaScript module import for functionality
+- Used by RouterNavigationService async navigation methods
+
+### DocumentInterop (Optional)
+- Registered as scoped service via AddBlazouterInterop()
+- Type-safe document and DOM manipulation
+- Dynamic page title updates
+- Meta tag management (description, keywords, Open Graph)
+- Canonical URL support for SEO
+- Scroll management (scroll to top, scroll to element)
+- Element focus management
+- Requires JavaScript module import for functionality
 
 ### RouteAttributeDiscoveryService
 - Supports all 8 route attributes

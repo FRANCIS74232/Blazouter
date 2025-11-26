@@ -760,6 +760,82 @@ builder.Services.AddBlazouterErrorHandler<CustomRouterErrorHandler>();
 - `NavigationFailed` - Navigation operation failed
 - `ComponentLoadFailed` - Component failed to load
 
+## 🔧 TypeScript Integration
+
+Blazouter includes TypeScript-based JavaScript interop for enhanced browser integration with full type safety.
+
+### Features
+
+- **SEO Support**: Set meta tags, Open Graph tags, and canonical URLs
+- **Type Safety**: Full TypeScript definitions with `.d.ts` files for IntelliSense
+- **Browser Navigation**: True browser back/forward navigation using the History API
+- **Document Manipulation**: Dynamic title updates, meta tags, scrolling, and focus management
+
+### Installation
+
+Enable JavaScript interop by registering the services:
+
+```csharp
+builder.Services.AddBlazouter();
+builder.Services.AddBlazouterInterop();  // Enable TypeScript interop
+```
+
+Add the JavaScript module import to your `index.html`:
+
+```html
+<!-- In wwwroot/index.html, add this in the <head> section -->
+<script type="module" src="_content/Blazouter/js/index.js"></script>
+```
+
+### Browser Navigation Example
+
+```csharp
+@inject RouterNavigationService NavService
+
+<button @onclick="GoBack">← Back</button>
+<button @onclick="GoForward">Forward →</button>
+
+@code {
+    private async Task GoBack()
+    {
+        await NavService.GoBackAsync();  // Uses browser History API
+    }
+
+    private async Task GoForward()
+    {
+        await NavService.GoForwardAsync();
+    }
+}
+```
+
+### Document Manipulation Example
+
+```csharp
+@inject DocumentInterop DocumentInterop
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Update page title
+            await DocumentInterop.SetTitleAsync("Home - My App");
+            
+            // Set meta tags for SEO
+            await DocumentInterop.SetMetaTagAsync("description", "Welcome to my app");
+            
+            // Set Open Graph tags for social sharing
+            await DocumentInterop.SetOpenGraphTagAsync("og:title", "My App");
+            
+            // Scroll to top on navigation
+            await DocumentInterop.ScrollToTopAsync();
+        }
+    }
+}
+```
+
+**[📚 Full TypeScript Integration Documentation →](TYPESCRIPT_INTEGRATION.md)**
+
 ## 🏗️ Project Structure
 
 ```
@@ -774,11 +850,17 @@ Blazouter/
 │   │   ├── Guards/                # Route guard implementations (AuthGuard)
 │   │   ├── Handlers/              # Error handler implementations (DefaultRouterErrorHandler)
 │   │   ├── Interfaces/            # Interface definitions (IRouteGuard, IRouteMiddleware, IRouteMatcherService, IRouterErrorHandler)
+│   │   ├── Interops/              # JavaScript interop services (NavigationInterop, DocumentInterop, StorageInterop, ViewportInterop, ClipboardInterop)
 │   │   ├── Models/                # Route models (RouteConfig, RouteMatch, RouterErrorContext, etc.)
 │   │   ├── Resources/             # Embedded resources
-│   │   ├── Services/              # Routing services (RouterStateService, RouteMatcherService, RouterNavigationService, etc.)
+│   │   ├── Services/              # Routing services (RouterStateService, RouteMatcherService, RouterNavigationService)
 │   │   ├── Utilities/             # Query string builder and helper utilities
 │   │   └── wwwroot/               # CSS and assets (blazouter.css, blazouter.min.css)
+│   │       └── js/                # Compiled JavaScript modules with TypeScript definitions (.js, .d.ts, .js.map)
+│   ├── Blazouter.TypeScript/      # TypeScript source files for JavaScript interop
+│   │   ├── TypeScript/            # TypeScript source files (navigation.ts, document.ts, storage.ts, viewport.ts, clipboard.ts, index.ts)
+│   │   ├── package.json           # NPM dependencies for TypeScript compilation
+│   │   └── tsconfig.json          # TypeScript compiler configuration
 │   ├── Blazouter.Server/          # Server-specific extensions
 │   │   ├── Extensions/            # Server integration (AddBlazouterSupport)
 │   │   ├── Pages/                 # Server pages
@@ -861,6 +943,7 @@ This project is licensed under the MIT License.
 - [Documentation](https://github.com/Taiizor/Blazouter/blob/develop/FEATURES.md)
 - [Contributing Guide](https://github.com/Taiizor/Blazouter/blob/develop/CONTRIBUTING.md)
 - [Sample Applications](https://github.com/Taiizor/Blazouter/tree/develop/samples)
+- [TypeScript Integration](https://github.com/Taiizor/Blazouter/blob/develop/TYPESCRIPT_INTEGRATION.md)
 
 ## 🙏 Acknowledgments
 
@@ -872,7 +955,7 @@ Inspired by React Router and built to bring similar capabilities to the Blazor e
 - [ ] Performance optimizations
 - [ ] Advanced caching strategies
 - [x] Query string helpers and utilities
-- [ ] Better TypeScript integration for JS interop
+- [x] Better TypeScript integration for JS interop
 
 ## ⭐ Show Your Support
 

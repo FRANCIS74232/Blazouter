@@ -81,6 +81,12 @@ namespace Blazouter.WebAssembly.Sample
                 Transition = RouteTransition.Curtain
             },
             new() {
+                Path = "/typescript",
+                Component = typeof(TypeScript),
+                Title = "TypeScript Integration",
+                Transition = RouteTransition.Reveal
+            },
+            new() {
                 Path = "/middleware",
                 Component = typeof(RouteMiddleware),
                 Title = "Middleware Example",

@@ -48,12 +48,13 @@ namespace Blazouter.Utilities
                 return this;
             }
 
-            if (!_parameters.ContainsKey(key))
+            if (!_parameters.TryGetValue(key, out List<string>? values))
             {
-                _parameters[key] = [];
+                values = [];
+                _parameters[key] = values;
             }
 
-            _parameters[key].Add(value);
+            values.Add(value);
             return this;
         }
 

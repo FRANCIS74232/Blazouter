@@ -247,8 +247,9 @@ Mix attribute-based routes with programmatic routes:
 
 ```csharp
 // In App.razor.cs or Routes.razor.cs
-using Blazouter.Extensions;
+using Blazouter.Enums;
 using Blazouter.Models;
+using Blazouter.Extensions;
 
 public partial class App
 {
@@ -277,8 +278,8 @@ Create routes entirely from attributes:
 
 ```csharp
 // In App.razor.cs or Routes.razor.cs
-using Blazouter.Extensions;
 using Blazouter.Models;
+using Blazouter.Extensions;
 
 public partial class App
 {

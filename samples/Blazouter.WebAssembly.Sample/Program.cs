@@ -17,6 +17,9 @@ namespace Blazouter.WebAssembly.Sample
             // Add Blazouter services
             builder.Services.AddBlazouter();
 
+            // Add TypeScript-based JavaScript interop services
+            builder.Services.AddBlazouterInterop();
+
             // Register sample services
             builder.Services.AddSingleton<AuthenticationService>();
 

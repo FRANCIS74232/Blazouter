@@ -1,3 +1,4 @@
+using Blazouter.Interops;
 using Microsoft.AspNetCore.Components;
 
 namespace Blazouter.Services
@@ -27,7 +28,10 @@ namespace Blazouter.Services
     /// }
     /// </code>
     /// </example>
-    public class RouterNavigationService(NavigationManager navigationManager, RouterStateService routerState)
+    public class RouterNavigationService(
+        NavigationManager navigationManager,
+        RouterStateService routerState,
+        NavigationInterop? browserNavigation = null)
     {
         /// <summary>
         /// Navigates to the specified path.
@@ -113,7 +117,8 @@ namespace Blazouter.Services
         /// <remarks>
         /// <para>
         /// <strong>Note:</strong> This is a placeholder implementation that navigates to the current path.
-        /// True browser back navigation requires JavaScript interop and is not currently implemented.
+        /// To enable proper browser back navigation, register <see cref="NavigationInterop"/> in your
+        /// service collection and use <see cref="GoBackAsync"/> instead.
         /// </para>
         /// <para>
         /// For proper back navigation in production applications, consider implementing JavaScript interop
@@ -139,6 +144,86 @@ namespace Blazouter.Services
             // Note: Browser back navigation requires JavaScript interop
             // This is a placeholder - actual implementation would need JS interop
             navigationManager.NavigateTo(routerState.CurrentPath);
+        }
+
+        /// <summary>
+        /// Navigates back in browser history using JavaScript interop.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <remarks>
+        /// <para>
+        /// This method uses the browser's History API to perform true back navigation.
+        /// It requires <see cref="NavigationInterop"/> to be registered in your service collection.
+        /// </para>
+        /// <para>
+        /// Register the interop services by calling <c>AddBlazouterInterop()</c> in your Program.cs:
+        /// <code>
+        /// builder.Services.AddBlazouter();
+        /// builder.Services.AddBlazouterInterop();
+        /// </code>
+        /// </para>
+        /// </remarks>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="NavigationInterop"/> is not registered.
+        /// </exception>
+        /// <example>
+        /// <code>
+        /// @inject RouterNavigationService NavService
+        /// 
+        /// private async Task HandleBackButton()
+        /// {
+        ///     await NavService.GoBackAsync();
+        /// }
+        /// </code>
+        /// </example>
+        public async Task GoBackAsync()
+        {
+            if (browserNavigation == null)
+            {
+                throw new InvalidOperationException(
+                    "NavigationInterop is not registered. " +
+                    "Call AddBlazouterInterop() in your service registration to enable JavaScript interop features.");
+            }
+
+            await browserNavigation.GoBackAsync();
+        }
+
+        /// <summary>
+        /// Navigates forward in browser history using JavaScript interop.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="NavigationInterop"/> is not registered.
+        /// </exception>
+        public async Task GoForwardAsync()
+        {
+            if (browserNavigation == null)
+            {
+                throw new InvalidOperationException(
+                    "NavigationInterop is not registered. " +
+                    "Call AddBlazouterInterop() in your service registration to enable JavaScript interop features.");
+            }
+
+            await browserNavigation.GoForwardAsync();
+        }
+
+        /// <summary>
+        /// Checks if the browser can navigate back in history.
+        /// </summary>
+        /// <returns>True if there is history to navigate back to; otherwise, false.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <see cref="NavigationInterop"/> is not registered.
+        /// </exception>
+        public async Task<bool> CanGoBackAsync()
+        {
+            if (browserNavigation == null)
+            {
+                throw new InvalidOperationException(
+                    "NavigationInterop is not registered. " +
+                    "Call AddBlazouterInterop() in your service registration to enable JavaScript interop features.");
+            }
+
+            return await browserNavigation.CanGoBackAsync();
         }
 
         /// <summary>

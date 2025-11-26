@@ -16,6 +16,7 @@ A powerful React Router-like routing library for Blazor applications. This is th
 - ✅ **Dynamic route parameters** - Easy access to route and query parameters
 - ✅ **Flexible layout system** - Default and per-route layouts with @Body support
 - ✅ **Query string utilities** - Type-safe query string builder and typed parameter parsing
+- ✅ **TypeScript integration** - Optional JavaScript interop for browser History and Document APIs
 
 ## Installation
 
@@ -290,6 +291,57 @@ private void NextPage()
 ```
 
 **Supported types**: string, int, long, decimal, double, bool, DateTime, Guid, enum, and nullable variants (15 type-safe methods each for `Add()` and `Set()`).
+
+## TypeScript Integration (Optional)
+
+Enhanced browser integration with type-safe JavaScript interop using 5 specialized services:
+
+```csharp
+// Enable JavaScript interop (optional)
+builder.Services.AddBlazouterInterop();
+```
+
+Add to your `index.html`:
+```html
+<script type="module" src="_content/Blazouter/js/index.js"></script>
+```
+
+**Available Services:**
+
+- **ClipboardInterop**: Clipboard operations (copy, read, permissions)
+- **StorageInterop**: localStorage & sessionStorage with JSON serialization
+- **NavigationInterop**: Browser History API (back/forward, URL info, hash, query params)
+- **ViewportInterop**: Viewport/device info (dimensions, device type, orientation, fullscreen)
+- **DocumentInterop**: Document manipulation (title, meta tags, scrolling, focus, CSS classes)
+
+```csharp
+@using Blazouter.Interops
+
+@inject StorageInterop Storage
+@inject DocumentInterop Document
+@inject ViewportInterop Viewport
+@inject ClipboardInterop Clipboard
+@inject NavigationInterop Navigation
+
+// Navigation
+await Navigation.GoBackAsync();
+string url = await Navigation.GetCurrentUrlAsync();
+
+// Document
+await Document.SetTitleAsync("Home - My App");
+await Document.ScrollToTopAsync();
+
+// Storage
+await Storage.SetLocalStorageAsync("key", myObject);
+var data = await Storage.GetLocalStorageAsync<MyType>("key");
+
+// Viewport
+string device = await Viewport.GetDeviceTypeAsync();
+bool isMobile = await Viewport.IsMobileAsync();
+
+// Clipboard
+await Clipboard.CopyTextAsync("text");
+```
 
 ## Transitions
 

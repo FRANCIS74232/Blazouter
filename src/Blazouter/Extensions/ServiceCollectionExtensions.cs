@@ -1,4 +1,6 @@
+using Blazouter.Handlers;
 using Blazouter.Interfaces;
+using Blazouter.Interops;
 using Blazouter.Models;
 using Blazouter.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -129,6 +131,99 @@ namespace Blazouter.Extensions
         public static IServiceCollection AddBlazouterErrorHandler<THandler>(this IServiceCollection services) where THandler : class, IRouterErrorHandler
         {
             services.AddScoped<IRouterErrorHandler, THandler>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds JavaScript interop services for Blazouter to the specified <see cref="IServiceCollection"/>.
+        /// </summary>
+        /// <param name="services">The service collection to add interop services to.</param>
+        /// <returns>
+        /// The same service collection so that multiple calls can be chained.
+        /// </returns>
+        /// <remarks>
+        /// <para>
+        /// This method registers TypeScript-based JavaScript interop services for enhanced browser integration.
+        /// The services provide type-safe access to browser APIs such as:
+        /// </para>
+        /// <list type="bullet">
+        /// <item>
+        /// <description><see cref="NavigationInterop"/> - Browser history navigation (back, forward, state management)</description>
+        /// </item>
+        /// <item>
+        /// <description><see cref="DocumentInterop"/> - Document manipulation (title, meta tags, scrolling, focus)</description>
+        /// </item>
+        /// </list>
+        /// <para>
+        /// These services are optional but highly recommended for production applications that need:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>Proper browser back/forward button support</description></item>
+        /// <item><description>Dynamic document title and meta tag updates for SEO</description></item>
+        /// <item><description>Scroll restoration and element focusing</description></item>
+        /// <item><description>Open Graph tag management for social media sharing</description></item>
+        /// </list>
+        /// <para>
+        /// The interop services require the compiled JavaScript modules to be included in your application.
+        /// These are automatically included when you reference the Blazouter package.
+        /// </para>
+        /// </remarks>
+        /// <example>
+        /// Register interop services in Program.cs:
+        /// <code>
+        /// // Add core Blazouter services
+        /// builder.Services.AddBlazouter();
+        /// 
+        /// // Add JavaScript interop services for enhanced functionality
+        /// builder.Services.AddBlazouterInterop();
+        /// 
+        /// // Now you can use the async navigation methods:
+        /// @inject RouterNavigationService NavService
+        /// 
+        /// private async Task HandleBackButton()
+        /// {
+        ///     await NavService.GoBackAsync();
+        /// }
+        /// 
+        /// // And document manipulation:
+        /// @inject DocumentInterop DocumentInterop
+        /// 
+        /// protected override async Task OnInitializedAsync()
+        /// {
+        ///     await DocumentInterop.SetTitleAsync("Home - My App");
+        ///     await DocumentInterop.ScrollToTopAsync();
+        /// }
+        /// 
+        /// // Storage operations:
+        /// @inject StorageInterop Storage
+        /// 
+        /// await Storage.SetLocalStorageAsync("theme", "dark");
+        /// var theme = await Storage.GetLocalStorageAsync&lt;string&gt;("theme");
+        /// 
+        /// // Viewport and device detection:
+        /// @inject ViewportInterop Viewport
+        /// 
+        /// var deviceType = await Viewport.GetDeviceTypeAsync(); // "mobile", "tablet", or "desktop"
+        /// 
+        /// // Clipboard operations:
+        /// @inject ClipboardInterop Clipboard
+        /// 
+        /// await Clipboard.CopyTextAsync("Hello, World!");
+        /// </code>
+        /// </example>
+        /// <seealso cref="StorageInterop"/>
+        /// <seealso cref="DocumentInterop"/>
+        /// <seealso cref="ViewportInterop"/>
+        /// <seealso cref="ClipboardInterop"/>
+        /// <seealso cref="NavigationInterop"/>
+        public static IServiceCollection AddBlazouterInterop(this IServiceCollection services)
+        {
+            services.AddScoped<StorageInterop>();
+            services.AddScoped<DocumentInterop>();
+            services.AddScoped<ViewportInterop>();
+            services.AddScoped<ClipboardInterop>();
+            services.AddScoped<NavigationInterop>();
 
             return services;
         }

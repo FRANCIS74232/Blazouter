@@ -7,6 +7,81 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.13] - 2025-11-26
+
+### Added
+- **TypeScript-Based JavaScript Interop Infrastructure**: Comprehensive type-safe browser API access
+  - TypeScript compilation pipeline with `.d.ts` generation for IntelliSense support
+  - Global namespace exposure pattern for C# interop: `window.blazouterNavigation`, `window.blazouterDocument`, `window.blazouterStorage`, `window.blazouterViewport`, `window.blazouterClipboard`
+  - Separate `Blazouter.TypeScript` project at `src/Blazouter.TypeScript/` for TypeScript source files
+  - NPM package with TypeScript compiler configuration (tsconfig.json)
+  - Compiled JavaScript modules with source maps and type definitions in `src/Blazouter/wwwroot/js/`
+  
+- **NavigationInterop Service**: Browser history and navigation API wrapper
+  - History API: `GoBackAsync()`, `GoForwardAsync()`, `GoAsync()`, `GetHistoryLengthAsync()`, `GetHistoryStateAsync()`
+  - URL helpers: `GetCurrentUrlAsync()`, `GetPathnameAsync()`
+  - Hash navigation: `GetHashAsync()`, `SetHashAsync()`
+  - Query parameters: `GetQueryStringAsync()`, `GetQueryParamAsync()`, `GetAllQueryParamsAsync()`
+  - Page control: `ReloadAsync()`
+  - Integration with `RouterNavigationService` providing `GoBackAsync()`, `GoForwardAsync()`, `CanGoBackAsync()`
+  
+- **DocumentInterop Service**: Document manipulation and SEO support
+  - Title management: `SetTitleAsync()`, `GetTitleAsync()`
+  - Meta tags: `SetMetaTagAsync()`, `GetMetaTagAsync()`, `RemoveMetaTagAsync()`
+  - Open Graph support: `SetOpenGraphTagAsync()`
+  - Canonical URLs: `SetCanonicalUrlAsync()`, `GetCanonicalUrlAsync()`
+  - Scroll control: `ScrollToTopAsync()`, `ScrollToBottomAsync()`, `ScrollToElementAsync()`, `GetScrollPositionAsync()`, `SetScrollPositionAsync()`
+  - Element management: `FocusElementAsync()`, `IsElementVisibleAsync()`
+  - CSS classes: `AddClassAsync()`, `RemoveClassAsync()`, `ToggleClassAsync()`
+  - Document state: `GetReadyStateAsync()`, `IsDocumentReadyAsync()`
+  
+- **StorageInterop Service**: Type-safe localStorage and sessionStorage access
+  - LocalStorage operations: `SetLocalStorageAsync<T>()`, `GetLocalStorageAsync<T>()`, `RemoveLocalStorageAsync()`, `ClearLocalStorageAsync()`, `GetLocalStorageKeysAsync()`, `HasLocalStorageAsync()`
+  - SessionStorage operations: `SetSessionStorageAsync<T>()`, `GetSessionStorageAsync<T>()`, `RemoveSessionStorageAsync()`, `ClearSessionStorageAsync()`, `GetSessionStorageKeysAsync()`, `HasSessionStorageAsync()`
+  - Generic type support with automatic JSON serialization/deserialization
+  
+- **ViewportInterop Service**: Viewport, screen, and device detection
+  - Viewport dimensions: `GetViewportSizeAsync()` returning `Size` record with width and height
+  - Screen information: `GetScreenSizeAsync()`
+  - Device pixel ratio: `GetPixelRatioAsync()`
+  - Orientation: `IsPortraitAsync()`, `IsLandscapeAsync()`, `GetOrientationAsync()`
+  - Device type detection: `IsMobileAsync()`, `IsTabletAsync()`, `IsDesktopAsync()`, `GetDeviceTypeAsync()`
+  - Fullscreen API: `IsFullscreenAsync()`, `RequestFullscreenAsync()`, `ExitFullscreenAsync()`
+  
+- **ClipboardInterop Service**: Clipboard operations with permission support
+  - Text operations: `CopyTextAsync()`, `ReadTextAsync()`
+  - Feature detection: `IsClipboardSupportedAsync()`
+  - Permission checks: `HasClipboardReadPermissionAsync()`, `HasClipboardWritePermissionAsync()`
+  - Fallback support for older browsers in `copyText()` implementation
+  
+- **Service Organization**: All interop services in `Blazouter.Interops` namespace
+  - Located at `src/Blazouter/Interops/` folder
+  - `AddBlazouterInterop()` extension method for DI registration (optional, non-breaking)
+  - Services injected as nullable dependencies for backward compatibility
+  
+- **Documentation**: Comprehensive guides and API references
+  - `TYPESCRIPT_INTEGRATION.md`: Complete documentation with usage examples, API references, migration guide, and hosting-specific instructions for WebAssembly, Hybrid, and Server models
+  - `FEATURES.md`: Feature #13 with detailed descriptions of all 5 interop services and their capabilities
+  - `README.md`: Installation instructions with JavaScript module import requirement, updated Project Structure
+  - `src/Blazouter/README.md` (NuGet): Concise TypeScript Integration section for package consumers
+  - All documentation includes required module import: `<script type="module" src="_content/Blazouter/js/index.js"></script>`
+
+### Changed
+- Project structure updated to include:
+  - `src/Blazouter.TypeScript/` - Separate project for TypeScript source files
+  - `src/Blazouter/Interops/` - All interop service implementations
+  - `src/Blazouter/wwwroot/js/` - Compiled JavaScript modules (.js, .d.ts, .js.map files)
+- `RouterNavigationService` enhanced with navigation interop integration
+- Service registration extended via `AddBlazouterInterop()` method
+
+### Technical Details
+- TypeScript source files: navigation.ts, document.ts, storage.ts, viewport.ts, clipboard.ts, index.ts
+- ES module format with explicit .js extensions for browser compatibility
+- TypeScript compilation generates declaration files for IntelliSense
+- JavaScript modules exposed via window object for C# JSRuntime interop
+- Optional module import - services gracefully handle missing JavaScript modules
+- Backward compatible - existing applications continue working without changes
+
 ## [1.0.12] - 2025-11-25
 
 ### Added
@@ -197,6 +272,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - FEATURES.md detailing all capabilities
 - Sample application demonstrating key features
 
+[1.0.13]: https://github.com/Taiizor/Blazouter/compare/v1.0.12...v1.0.13
 [1.0.12]: https://github.com/Taiizor/Blazouter/compare/v1.0.11...v1.0.12
 [1.0.11]: https://github.com/Taiizor/Blazouter/compare/v1.0.10...v1.0.11
 [1.0.10]: https://github.com/Taiizor/Blazouter/compare/v1.0.9...v1.0.10

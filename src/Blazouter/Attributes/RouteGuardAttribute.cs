@@ -1,3 +1,5 @@
+using Blazouter.Interfaces;
+
 namespace Blazouter.Attributes
 {
     /// <summary>
@@ -35,7 +37,7 @@ namespace Blazouter.Attributes
     /// <item><description><strong>Unsaved changes:</strong> Warn users before leaving forms with unsaved data</description></item>
     /// </list>
     /// <para>
-    /// The guard type must implement the <see cref="Guards.IRouteGuard"/> interface, which defines two methods:
+    /// The guard type must implement the <see cref="IRouteGuard"/> interface, which defines two methods:
     /// CanActivateAsync (determines if navigation is allowed) and GetRedirectPathAsync (specifies where
     /// to redirect if access is denied).
     /// </para>
@@ -100,7 +102,7 @@ namespace Blazouter.Attributes
         /// Gets the type of the route guard.
         /// </summary>
         /// <value>
-        /// A Type that implements <see cref="Guards.IRouteGuard"/>. This type will be instantiated or resolved
+        /// A Type that implements <see cref="IRouteGuard"/>. This type will be instantiated or resolved
         /// from dependency injection when the route is accessed.
         /// </value>
         /// <remarks>

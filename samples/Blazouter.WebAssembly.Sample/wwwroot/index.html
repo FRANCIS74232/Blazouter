@@ -4,6 +4,7 @@
 <head>
     <base href="/" />
     <meta charset="utf-8" />
+    <script type="importmap"></script>
     <link rel="preload" id="webassembly" />
     <title>Blazouter WebAssembly Sample</title>
     <link rel="stylesheet" href="css/app.min.css" />
@@ -11,11 +12,12 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
+    <!-- Blazouter TypeScript Interop -->
+    <script type="module" src="_content/Blazouter/js/index.js"></script>
     <link rel="stylesheet" href="_content/Blazouter/blazouter.min.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- If you add any scoped CSS files, uncomment the following to load them
     <link href="Blazouter.WebAssembly.Sample.styles.css" rel="stylesheet" /> -->
-    <script type="importmap"></script>
     <script>
         // Initialize theme from localStorage before page renders
         (function () {

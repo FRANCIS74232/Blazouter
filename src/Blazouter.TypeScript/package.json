@@ -1,0 +1,20 @@
+{
+  "name": "blazouter",
+  "version": "1.0.12",
+  "description": "TypeScript definitions and JavaScript interop for Blazouter",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "keywords": [
+    "blazor",
+    "router",
+    "blazouter",
+    "typescript",
+    "javascript-interop"
+  ]
+}
